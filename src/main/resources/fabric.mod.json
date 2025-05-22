@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "serverutils",
+	"version": "${version}",
+	"name": "ServerUtils",
+	"description": "This is a mod that adds detailed commands to the server.",
+	"authors": [
+		"keufcp"
+	],
+	"contact": {
+		"homepage": "https://keufcp.github.io",
+		"sources": "https://github.com/keufcp/"
+	},
+	"license": "MIT",
+	"icon": "assets/serverutils/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"io.github.keufcp.ServerUtils"
+		],
+		"client": [
+			"io.github.keufcp.ServerUtilsClient"
+		]
+	},
+	"mixins": [
+		"serverutils.mixins.json",
+		{
+			"config": "serverutils.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21.5",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

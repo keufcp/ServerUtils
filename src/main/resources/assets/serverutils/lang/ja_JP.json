@@ -1,0 +1,11 @@
+{
+  "uptime.label": "サーバー稼働時間: {0}",
+  "uptime.format": "{0}日 {1}時間 {2}分 {3}秒",
+  "config.reload": "設定をリロードしました",
+  "webhook.title": "サーバーステータス",
+  "webhook.description": "サーバーステータスレポート",
+  "webhook.uptime.title": "サーバー稼働時間",
+  "tps.result": "TPS: {0}",
+  "mspt.result": "MSPT: {0} ms",
+  "serverutils.prefix": "[ServerUtils] "
+}

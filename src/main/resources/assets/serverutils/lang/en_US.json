@@ -1,0 +1,11 @@
+{
+  "uptime.label": "Server uptime: {0}",
+  "uptime.format": "{0}d {1}h {2}m {3}s",
+  "config.reload": "Config reloaded",
+  "webhook.title": "Server Status",
+  "webhook.description": "Server Status Report",
+  "webhook.uptime.title": "Server Uptime",
+  "tps.result": "TPS: {0}",
+  "mspt.result": "MSPT: {0} ms",
+  "serverutils.prefix": "[ServerUtils] "
+}
