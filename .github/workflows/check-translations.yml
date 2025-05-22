@@ -1,0 +1,24 @@
+name: Check Translations
+
+on:
+  push:
+    paths:
+      - 'src/main/resources/assets/serverutils/lang/**.json'
+  pull_request:
+    paths:
+      - 'src/main/resources/assets/serverutils/lang/**.json'
+
+jobs:
+  check_translations:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run translation check script
+        run: node .github/workflows/checkTranslations.js
