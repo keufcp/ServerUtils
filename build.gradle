@@ -49,7 +49,7 @@ dependencies {
     modImplementation include("maven.modrinth:midnightlib:${project.midnightlib_version}")
 
     // Quartz scheduler for webhook scheduling
-    modImplementation include("org.quartz-scheduler:quartz:2.3.2")
+    modImplementation include("org.quartz-scheduler:quartz:2.5.0")
     // Quartzの依存関係
     modImplementation include("org.slf4j:slf4j-api:1.7.30")
     modImplementation include("com.zaxxer:HikariCP:3.4.5") { exclude(group: "*") }
