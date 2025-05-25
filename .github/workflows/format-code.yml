@@ -26,7 +26,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Format Java code
-      uses: axel-op/googlejavaformat-action@v3
+      uses: axel-op/googlejavaformat-action@v4
       with:
         args: "--aosp --replace"
         skip-commit: true
