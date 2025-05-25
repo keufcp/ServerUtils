@@ -1,0 +1,14 @@
+version: 2
+updates:
+  # Gradle依存パッケージの自動更新PR
+  - package-ecosystem: "gradle"
+    directory: "/"                # build.gradleがあるディレクトリ
+    schedule:
+      interval: "weekly"          # 更新頻度: daily, weekly, monthly から選択
+    open-pull-requests-limit: 5   # 同時に開くPRの最大数
+
+  # GitHub Actionsの依存も自動更新
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
