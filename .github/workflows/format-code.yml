@@ -32,10 +32,9 @@ jobs:
         skip-commit: true
 
     - name: Apply .editorconfig rules
-      run: |
-        find src -name "*.java" -type f -exec sed -i 's/\r$//' {} \;
-        find src -name "*.java" -type f -exec sed -i 's/[[:space:]]*$//' {} \;
-        find src -name "*.java" -type f -exec sh -c 'if [ -n "$(tail -c1 "$1")" ]; then echo >> "$1"; fi' _ {} \;
+      uses: editorconfig-checker/action-editorconfig-checker@v2
+      with:
+        flags: '--fix'
 
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
