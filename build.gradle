@@ -52,7 +52,7 @@ dependencies {
     modImplementation include("org.quartz-scheduler:quartz:2.5.0")
     // Quartzの依存関係
     modImplementation include("org.slf4j:slf4j-api:2.0.17")
-    modImplementation include("com.zaxxer:HikariCP:3.4.5") { exclude(group: "*") }
+    modImplementation include("com.zaxxer:HikariCP:6.3.0") { exclude(group: "*") }
 
     // Gson for JSON processing (if not already available through Minecraft)
     modImplementation include("com.google.code.gson:gson:2.10.1")
