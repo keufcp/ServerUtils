@@ -8,14 +8,14 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 /**
- * 色付きテキスト作成のユーティリティクラス.
+ * 色付きテキスト作成のユーティリティクラス．
  *
- * <p>環境に応じて色付きテキストまたはプレーンテキストを適切に出力し、 再利用可能な色分けロジックを提供する。
+ * <p>環境に応じて色付きテキストまたはプレーンテキストを適切に出力し， 再利用可能な色分けロジックを提供する．
  */
 public class ColoredTextBuilder {
 
     /**
-     * 色付きテキストの有効性を判定する.
+     * 色付きテキストの有効性を判定する．
      *
      * @param source コマンドソース
      * @return 色付きテキストが有効な場合はtrue
@@ -31,7 +31,7 @@ public class ColoredTextBuilder {
     }
 
     /**
-     * 環境に応じてテキストを送信する.
+     * 環境に応じてテキストを送信する．
      *
      * @param source コマンドソース
      * @param coloredText 色付きテキスト
@@ -46,11 +46,11 @@ public class ColoredTextBuilder {
         }
     }
 
-    /** 数値比較結果に基づく色分けフォーマットを取得する. */
+    /** 数値比較結果に基づく色分けフォーマットを取得する． */
     public static class ComparisonColors {
 
         /**
-         * 分子と分母の比較に基づく色を取得する.
+         * 分子と分母の比較に基づく色を取得する．
          *
          * @param numerator 分子
          * @param denominator 分母
@@ -69,7 +69,7 @@ public class ColoredTextBuilder {
         }
 
         /**
-         * 分母の状態に基づく色を取得する.
+         * 分母の状態に基づく色を取得する．
          *
          * @param denominator 分母
          * @param isValidState 有効な状態かどうか
@@ -88,11 +88,11 @@ public class ColoredTextBuilder {
         }
     }
 
-    /** パーセンテージベースの色分けフォーマットを取得する. */
+    /** パーセンテージベースの色分けフォーマットを取得する． */
     public static class PercentageColors {
 
         /**
-         * パーセンテージに基づく色を取得する.
+         * パーセンテージに基づく色を取得する．
          *
          * @param percentage パーセンテージ（0.0 - 1.0+）
          * @return 適切なフォーマット
@@ -112,11 +112,11 @@ public class ColoredTextBuilder {
         }
     }
 
-    /** 状態に基づく色分けフォーマットを取得する. */
+    /** 状態に基づく色分けフォーマットを取得する． */
     public static class StatusColors {
 
         /**
-         * エラーメッセージの色を取得する.
+         * エラーメッセージの色を取得する．
          *
          * @return エラー用フォーマット
          */
@@ -125,7 +125,7 @@ public class ColoredTextBuilder {
         }
 
         /**
-         * 警告メッセージの色を取得する.
+         * 警告メッセージの色を取得する．
          *
          * @return 警告用フォーマット
          */
@@ -134,7 +134,7 @@ public class ColoredTextBuilder {
         }
 
         /**
-         * 情報メッセージの色を取得する.
+         * 情報メッセージの色を取得する．
          *
          * @return 情報用フォーマット
          */
@@ -143,7 +143,7 @@ public class ColoredTextBuilder {
         }
 
         /**
-         * 成功メッセージの色を取得する.
+         * 成功メッセージの色を取得する．
          *
          * @return 成功用フォーマット
          */
@@ -152,7 +152,7 @@ public class ColoredTextBuilder {
         }
 
         /**
-         * 無効/無効化状態の色を取得する.
+         * 無効/無効化状態の色を取得する．
          *
          * @return 無効用フォーマット
          */
@@ -161,7 +161,7 @@ public class ColoredTextBuilder {
         }
 
         /**
-         * 通常テキストの色を取得する.
+         * 通常テキストの色を取得する．
          *
          * @return 通常用フォーマット
          */
@@ -170,11 +170,11 @@ public class ColoredTextBuilder {
         }
     }
 
-    /** MobCap専用の色分けロジック. */
+    /** MobCap専用の色分けロジック． */
     public static class MobCapColors {
 
         /**
-         * MobCap使用状況に基づく分子の色を取得する.
+         * MobCap使用状況に基づく分子の色を取得する．
          *
          * @param current 現在のモンスター数
          * @param cap MobCap上限
@@ -185,7 +185,7 @@ public class ColoredTextBuilder {
         }
 
         /**
-         * MobCap状況に基づく分母の色を取得する.
+         * MobCap状況に基づく分母の色を取得する．
          *
          * @param cap MobCap値
          * @param spawnChunkCount スポーンチャンク数
@@ -196,7 +196,7 @@ public class ColoredTextBuilder {
         }
 
         /**
-         * MobCap情報の表示テキストを作成する.
+         * MobCap情報の表示テキストを作成する．
          *
          * @param current 現在のモンスター数
          * @param cap MobCap上限
@@ -217,9 +217,9 @@ public class ColoredTextBuilder {
     }
 
     /**
-     * フォーマット済みテキストビルダー.
+     * フォーマット済みテキストビルダー．
      *
-     * <p>メソッドチェーンで色付きテキストを構築する。
+     * <p>メソッドチェーンで色付きテキストを構築する．
      */
     public static class Builder {
         private final MutableText text;

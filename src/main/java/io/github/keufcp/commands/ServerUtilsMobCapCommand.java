@@ -22,9 +22,9 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 
 /**
- * ServerUtils MobCap情報表示コマンドクラス.
+ * ServerUtils MobCap情報表示コマンドクラス．
  *
- * <p>/suMobCap コマンドの登録・実行処理を担当し、 サーバー内の各ディメンションのモンスターキャップ情報を表示する。
+ * <p>/suMobCap コマンドの登録・実行処理を担当し，サーバー内の各ディメンションのモンスターキャップ情報を表示する．
  */
 public class ServerUtilsMobCapCommand {
 
@@ -34,12 +34,12 @@ public class ServerUtilsMobCapCommand {
                     CommandSource.suggestMatching(
                             DimensionResolver.getSuggestions(context.getSource()), builder);
 
-    /** /suMobCap コマンドのコマンドディスパッチャへの登録. */
+    /** /suMobCap コマンドのコマンドディスパッチャへの登録． */
     public static void register() {
         CommandRegistrationCallback.EVENT.register(ServerUtilsMobCapCommand::registerCommand);
     }
 
-    /** コマンドの詳細登録処理. */
+    /** コマンドの詳細登録処理． */
     private static void registerCommand(
             CommandDispatcher<ServerCommandSource> dispatcher,
             CommandRegistryAccess registryAccess,
@@ -84,7 +84,7 @@ public class ServerUtilsMobCapCommand {
                                                                                 true)))));
     }
 
-    /** 全ディメンションコマンドの実行. */
+    /** 全ディメンションコマンドの実行． */
     private static int executeAllDimensionsCommand(ServerCommandSource source, boolean debug) {
         Text output;
         if (ColoredTextBuilder.shouldUseColoredText(source)) {
@@ -97,7 +97,7 @@ public class ServerUtilsMobCapCommand {
         return 1;
     }
 
-    /** 単一ディメンションコマンドの実行. */
+    /** 単一ディメンションコマンドの実行． */
     private static int executeSpecificDimensionCommand(
             ServerCommandSource source, String dimensionString, boolean debug)
             throws CommandSyntaxException {
@@ -125,7 +125,7 @@ public class ServerUtilsMobCapCommand {
         return 1;
     }
 
-    /** 無効なディメンション例外を作成する. */
+    /** 無効なディメンション例外を作成する． */
     private static SimpleCommandExceptionType createInvalidDimensionException() {
         return new SimpleCommandExceptionType(
                 Text.literal(ServerUtils.LANG.get("mobcap.error.invalid_dimension")));

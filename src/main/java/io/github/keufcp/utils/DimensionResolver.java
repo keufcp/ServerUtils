@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/** ディメンション文字列からServerWorldオブジェクトを解決するユーティリティクラス. */
+/** ディメンション文字列からServerWorldオブジェクトを解決するユーティリティクラス． */
 public class DimensionResolver {
 
     private static final Map<String, RegistryKey<World>> DIMENSION_ALIASES =
@@ -23,7 +23,7 @@ public class DimensionResolver {
                     "end", World.END);
 
     /**
-     * ディメンション文字列からServerWorldオブジェクトを解決する.
+     * ディメンション文字列からServerWorldオブジェクトを解決する．
      *
      * @param source コマンドソース
      * @param dimString ディメンション指定文字列
@@ -55,7 +55,7 @@ public class DimensionResolver {
     }
 
     /**
-     * ディメンション候補のリストを取得する.
+     * ディメンション候補のリストを取得する．
      *
      * @param source コマンドソース
      * @return ディメンション候補のリスト

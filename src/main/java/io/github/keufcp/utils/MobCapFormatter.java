@@ -11,10 +11,10 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-/** MobCap情報の出力フォーマッティングを担当するクラス. */
+/** MobCap情報の出力フォーマッティングを担当するクラス． */
 public class MobCapFormatter {
 
-    /** 全ディメンションのMobCap情報を色付きテキストで作成する. */
+    /** 全ディメンションのMobCap情報を色付きテキストで作成する． */
     public static Text createColoredAllDimensionsOutput(ServerCommandSource source, boolean debug) {
         ColoredTextBuilder.Builder builder = new ColoredTextBuilder.Builder();
         builder.appendLine(
@@ -37,7 +37,7 @@ public class MobCapFormatter {
         return builder.build();
     }
 
-    /** 単一ディメンションのMobCap情報を色付きテキストで作成する. */
+    /** 単一ディメンションのMobCap情報を色付きテキストで作成する． */
     public static Text createColoredSingleDimensionOutput(
             ServerWorld world, String dimensionDisplayName, boolean debug) {
         ColoredTextBuilder.Builder builder = new ColoredTextBuilder.Builder();
@@ -48,7 +48,7 @@ public class MobCapFormatter {
         return builder.build();
     }
 
-    /** 全ディメンションのMobCap情報をプレーンテキストで作成する. */
+    /** 全ディメンションのMobCap情報をプレーンテキストで作成する． */
     public static String createPlainAllDimensionsOutput(ServerCommandSource source, boolean debug) {
         StringBuilder response = new StringBuilder(ServerUtils.LANG.get("mobcap.title.all") + "\n");
 
@@ -65,7 +65,7 @@ public class MobCapFormatter {
         return response.toString();
     }
 
-    /** 単一ディメンションのMobCap情報をプレーンテキストで作成する. */
+    /** 単一ディメンションのMobCap情報をプレーンテキストで作成する． */
     public static String createPlainSingleDimensionOutput(
             ServerWorld world, String dimensionDisplayName, boolean debug) {
         StringBuilder response =

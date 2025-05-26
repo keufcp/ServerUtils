@@ -8,13 +8,13 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.World;
 
-/** MobCap情報の取得と処理を担当するクラス. */
+/** MobCap情報の取得と処理を担当するクラス． */
 public class MobCapProcessor {
 
     public static final int SPAWN_CHUNK_AREA_CONSTANT = 17 * 17; // スポーンチャンクエリアの定数 (289)
 
     /**
-     * ディメンションのMobCap情報を取得する.
+     * ディメンションのMobCap情報を取得する．
      *
      * @param world 対象のServerWorld
      * @return MobCap情報オブジェクト
@@ -39,7 +39,7 @@ public class MobCapProcessor {
     }
 
     /**
-     * ディメンション表示名を取得する.
+     * ディメンション表示名を取得する．
      *
      * @param world 対象のServerWorld
      * @return 表示用ディメンション名
@@ -75,7 +75,7 @@ public class MobCapProcessor {
         return 0;
     }
 
-    /** MobCap情報を格納するデータクラス. */
+    /** MobCap情報を格納するデータクラス． */
     public static class MobCapInfo {
         private final long currentMonsterCount;
         private final int mobCap;
