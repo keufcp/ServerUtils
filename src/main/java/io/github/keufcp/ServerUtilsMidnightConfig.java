@@ -173,7 +173,7 @@ public class ServerUtilsMidnightConfig extends MidnightConfig {
                 webhookCronExpression = "0 0 0 * * ?"; // デフォルト値へリセット
                 ServerUtils.LOGGER.warn(
                         "Invalid cron expression format. Reset to default: 0 0 0 * * ? (daily at"
-                            + " midnight)");
+                                + " midnight)");
             }
         }
     }
