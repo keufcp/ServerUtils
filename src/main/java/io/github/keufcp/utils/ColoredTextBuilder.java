@@ -1,6 +1,7 @@
 package io.github.keufcp.utils;
 
 import io.github.keufcp.ServerUtilsMidnightConfig;
+
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -8,10 +9,8 @@ import net.minecraft.util.Formatting;
 
 /**
  * 色付きテキスト作成のユーティリティクラス.
- * <p>
- * 環境に応じて色付きテキストまたはプレーンテキストを適切に出力し、
- * 再利用可能な色分けロジックを提供する。
- * </p>
+ *
+ * <p>環境に応じて色付きテキストまたはプレーンテキストを適切に出力し、 再利用可能な色分けロジックを提供する。
  */
 public class ColoredTextBuilder {
 
@@ -38,7 +37,8 @@ public class ColoredTextBuilder {
      * @param coloredText 色付きテキスト
      * @param plainText プレーンテキスト
      */
-    public static void sendFormattedFeedback(ServerCommandSource source, Text coloredText, String plainText) {
+    public static void sendFormattedFeedback(
+            ServerCommandSource source, Text coloredText, String plainText) {
         if (shouldUseColoredText(source)) {
             source.sendFeedback(() -> coloredText, false);
         } else {
@@ -46,9 +46,7 @@ public class ColoredTextBuilder {
         }
     }
 
-    /**
-     * 数値比較結果に基づく色分けフォーマットを取得する.
-     */
+    /** 数値比較結果に基づく色分けフォーマットを取得する. */
     public static class ComparisonColors {
 
         /**
@@ -60,13 +58,13 @@ public class ColoredTextBuilder {
          */
         public static Formatting getNumeratorColor(long numerator, int denominator) {
             if (denominator == 0) {
-                return Formatting.GRAY;         // 分母が0の場合
+                return Formatting.GRAY; // 分母が0の場合
             }
 
             if (numerator > denominator) {
-                return Formatting.RED;          // 上限超過
+                return Formatting.RED; // 上限超過
             } else {
-                return Formatting.GREEN;        // 正常範囲
+                return Formatting.GREEN; // 正常範囲
             }
         }
 
@@ -80,19 +78,17 @@ public class ColoredTextBuilder {
         public static Formatting getDenominatorColor(int denominator, boolean isValidState) {
             if (denominator == 0) {
                 if (isValidState) {
-                    return Formatting.GRAY;     // 正常な0状態
+                    return Formatting.GRAY; // 正常な0状態
                 } else {
-                    return Formatting.RED;      // 異常な0状態
+                    return Formatting.RED; // 異常な0状態
                 }
             } else {
-                return Formatting.WHITE;        // 正常値
+                return Formatting.WHITE; // 正常値
             }
         }
     }
 
-    /**
-     * パーセンテージベースの色分けフォーマットを取得する.
-     */
+    /** パーセンテージベースの色分けフォーマットを取得する. */
     public static class PercentageColors {
 
         /**
@@ -103,22 +99,20 @@ public class ColoredTextBuilder {
          */
         public static Formatting getPercentageColor(double percentage) {
             if (percentage >= 1.0) {
-                return Formatting.RED;          // 100%以上
+                return Formatting.RED; // 100%以上
             } else if (percentage >= 0.9) {
-                return Formatting.YELLOW;       // 90%以上
+                return Formatting.YELLOW; // 90%以上
             } else if (percentage >= 0.7) {
-                return Formatting.GREEN;        // 70%以上
+                return Formatting.GREEN; // 70%以上
             } else if (percentage >= 0.5) {
-                return Formatting.DARK_GREEN;   // 50%以上
+                return Formatting.DARK_GREEN; // 50%以上
             } else {
-                return Formatting.AQUA;         // 50%未満
+                return Formatting.AQUA; // 50%未満
             }
         }
     }
 
-    /**
-     * 状態に基づく色分けフォーマットを取得する.
-     */
+    /** 状態に基づく色分けフォーマットを取得する. */
     public static class StatusColors {
 
         /**
@@ -176,9 +170,7 @@ public class ColoredTextBuilder {
         }
     }
 
-    /**
-     * MobCap専用の色分けロジック.
-     */
+    /** MobCap専用の色分けロジック. */
     public static class MobCapColors {
 
         /**
@@ -213,20 +205,21 @@ public class ColoredTextBuilder {
          */
         public static Text createMobCapDisplay(long current, int cap, int spawnChunkCount) {
             return Text.empty()
-                .append(Text.literal("  "))
-                .append(Text.literal(String.valueOf(current))
-                    .formatted(getCurrentCountColor(current, cap)))
-                .append(Text.literal("/").formatted(StatusColors.getNormalColor()))
-                .append(Text.literal(String.valueOf(cap))
-                    .formatted(getCapLimitColor(cap, spawnChunkCount)));
+                    .append(Text.literal("  "))
+                    .append(
+                            Text.literal(String.valueOf(current))
+                                    .formatted(getCurrentCountColor(current, cap)))
+                    .append(Text.literal("/").formatted(StatusColors.getNormalColor()))
+                    .append(
+                            Text.literal(String.valueOf(cap))
+                                    .formatted(getCapLimitColor(cap, spawnChunkCount)));
         }
     }
 
     /**
      * フォーマット済みテキストビルダー.
-     * <p>
-     * メソッドチェーンで色付きテキストを構築する。
-     * </p>
+     *
+     * <p>メソッドチェーンで色付きテキストを構築する。
      */
     public static class Builder {
         private final MutableText text;

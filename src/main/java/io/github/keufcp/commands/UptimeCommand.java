@@ -1,7 +1,10 @@
 package io.github.keufcp.commands;
 
+import static io.github.keufcp.ServerUtilsMidnightConfig.uptimePermissionLevel;
+
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
+
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -9,26 +12,25 @@ import net.minecraft.text.Text;
 
 import java.util.List;
 
-import static io.github.keufcp.ServerUtilsMidnightConfig.uptimePermissionLevel;
-
 /**
  * サーバー稼働時間（Uptime）表示コマンドクラス．
- * <p>
- * /uptime コマンド登録・実行処理，
- * サーバー起動時刻からの経過時間計算担当．
- * </p>
+ *
+ * <p>/uptime コマンド登録・実行処理， サーバー起動時刻からの経過時間計算担当．
  */
 public class UptimeCommand {
-    /**
-     * /uptime コマンドのコマンドディスパッチャへの登録．
-     */
+    /** /uptime コマンドのコマンドディスパッチャへの登録． */
     public static void register() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            dispatcher.register(CommandManager.literal("uptime")
-                .executes(UptimeCommand::runUptimeCommand)
-                .requires(source -> source.hasPermissionLevel(uptimePermissionLevel)) // configから取得
-            );
-        });
+        CommandRegistrationCallback.EVENT.register(
+                (dispatcher, registryAccess, environment) -> {
+                    dispatcher.register(
+                            CommandManager.literal("uptime")
+                                    .executes(UptimeCommand::runUptimeCommand)
+                                    .requires(
+                                            source ->
+                                                    source.hasPermissionLevel(
+                                                            uptimePermissionLevel)) // configから取得
+                            );
+                });
     }
 
     /**
@@ -37,7 +39,8 @@ public class UptimeCommand {
      * @return {@code List.of(days, hours, minutes, seconds)}
      */
     public static List<Long> calculateUptime() {
-        long uptimeMillis = System.currentTimeMillis() - io.github.keufcp.ServerUtils.serverStartTimeMillis;
+        long uptimeMillis =
+                System.currentTimeMillis() - io.github.keufcp.ServerUtils.serverStartTimeMillis;
         long seconds = uptimeMillis / 1000 % 60;
         long minutes = uptimeMillis / (1000 * 60) % 60;
         long hours = (uptimeMillis / (1000 * 60 * 60)) % 24;
@@ -52,8 +55,12 @@ public class UptimeCommand {
      * @return フォーマット済み時間文字列
      */
     public static String formatUptimeValue(List<Long> uptimeList) {
-        return io.github.keufcp.ServerUtils.LANG.get("uptime.format",
-            uptimeList.get(0), uptimeList.get(1), uptimeList.get(2), uptimeList.get(3));
+        return io.github.keufcp.ServerUtils.LANG.get(
+                "uptime.format",
+                uptimeList.get(0),
+                uptimeList.get(1),
+                uptimeList.get(2),
+                uptimeList.get(3));
     }
 
     /**

@@ -11,10 +11,8 @@ import java.util.Map;
 
 /**
  * 多言語リソース管理クラス．
- * <p>
- * 指定言語コードに対応するJSONファイルからのメッセージ読み込み，
- * キーに基づくメッセージ取得・フォーマット提供．
- * </p>
+ *
+ * <p>指定言語コードに対応するJSONファイルからのメッセージ読み込み， キーに基づくメッセージ取得・フォーマット提供．
  */
 public class LangManager {
     /** 読み込まれたメッセージのマップ (キー: メッセージキー，値: メッセージ文字列) */
@@ -28,8 +26,7 @@ public class LangManager {
     public LangManager(String langCode) {
         String path = String.format("assets/serverutils/lang/%s.json", langCode);
         Map<String, String> loaded = new HashMap<>();
-        Type type = new TypeToken<Map<String, String>>() {
-        }.getType();
+        Type type = new TypeToken<Map<String, String>>() {}.getType();
         try (InputStreamReader reader = getReader(path)) {
             if (reader != null) {
                 loaded = new Gson().fromJson(reader, type);
@@ -63,7 +60,7 @@ public class LangManager {
     /**
      * メッセージキー対応文言取得と引数フォーマット．
      *
-     * @param key  メッセージキー
+     * @param key メッセージキー
      * @param args フォーマット引数
      * @return フォーマット済みメッセージ
      */
@@ -72,4 +69,3 @@ public class LangManager {
         return java.text.MessageFormat.format(template, args);
     }
 }
-

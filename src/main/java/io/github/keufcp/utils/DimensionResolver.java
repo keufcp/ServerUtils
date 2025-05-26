@@ -10,19 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * ディメンション文字列からServerWorldオブジェクトを解決するユーティリティクラス.
- */
+/** ディメンション文字列からServerWorldオブジェクトを解決するユーティリティクラス. */
 public class DimensionResolver {
 
-    private static final Map<String, RegistryKey<World>> DIMENSION_ALIASES = Map.of(
-        "o", World.OVERWORLD,
-        "overworld", World.OVERWORLD,
-        "n", World.NETHER,
-        "nether", World.NETHER,
-        "e", World.END,
-        "end", World.END
-    );
+    private static final Map<String, RegistryKey<World>> DIMENSION_ALIASES =
+            Map.of(
+                    "o", World.OVERWORLD,
+                    "overworld", World.OVERWORLD,
+                    "n", World.NETHER,
+                    "nether", World.NETHER,
+                    "e", World.END,
+                    "end", World.END);
 
     /**
      * ディメンション文字列からServerWorldオブジェクトを解決する.
@@ -78,8 +76,8 @@ public class DimensionResolver {
 
     private static RegistryKey<World> findWorldKeyById(ServerCommandSource source, Identifier id) {
         return source.getServer().getWorldRegistryKeys().stream()
-            .filter(key -> key.getValue().equals(id))
-            .findFirst()
-            .orElse(null);
+                .filter(key -> key.getValue().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 }

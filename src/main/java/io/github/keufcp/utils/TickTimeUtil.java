@@ -3,16 +3,15 @@ package io.github.keufcp.utils;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * サーバーのTick時間関連ユーティリティクラス．
- * TPS (Ticks Per Second) および MSPT (Milliseconds Per Tick) の計算機能提供．
- */
+/** サーバーのTick時間関連ユーティリティクラス． TPS (Ticks Per Second) および MSPT (Milliseconds Per Tick) の計算機能提供． */
 public class TickTimeUtil {
 
     /** Minecraftデフォルト目標TPS */
     private static final int TPS_TARGET = 20;
+
     /** Tick時間キャッシュ数 */
     private static final int TICK_TIME_SAMPLES = 100;
+
     /** Tick時間キャッシュ */
     private static final Queue<Long> recentTickTimes = new ConcurrentLinkedQueue<>();
 

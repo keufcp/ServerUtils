@@ -1,41 +1,40 @@
 package io.github.keufcp.commands;
 
+import static io.github.keufcp.ServerUtils.MOD_ID;
+
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
+
 import eu.midnightdust.lib.config.MidnightConfig;
+
 import io.github.keufcp.ServerUtils;
 import io.github.keufcp.ServerUtilsMidnightConfig;
 import io.github.keufcp.utils.WebhookSender;
+
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
-import static io.github.keufcp.ServerUtils.MOD_ID;
-
 /**
  * ServerUtils設定リロードコマンドクラス．
- * <p>
- * /suReload コマンド登録・実行処理担当，
- * 設定・言語リソース再読み込み．
- * </p>
+ *
+ * <p>/suReload コマンド登録・実行処理担当， 設定・言語リソース再読み込み．
  */
 public class ServerUtilsReloadCommand {
-    /**
-     * /suReload コマンドのコマンドディスパッチャへの登録．
-     */
+    /** /suReload コマンドのコマンドディスパッチャへの登録． */
     public static void register() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-            dispatcher.register(CommandManager.literal("suReload")
-                .executes(ServerUtilsReloadCommand::runReloadCommand)
-                .requires(source -> source.hasPermissionLevel(4)) // OP権限要求
-            )
-        );
+        CommandRegistrationCallback.EVENT.register(
+                (dispatcher, registryAccess, environment) ->
+                        dispatcher.register(
+                                CommandManager.literal("suReload")
+                                        .executes(ServerUtilsReloadCommand::runReloadCommand)
+                                        .requires(source -> source.hasPermissionLevel(4)) // OP権限要求
+                                ));
     }
 
     /**
-     * /suReloadコマンド実行時処理．
-     * 設定・ロケール・LangManager再初期化．
+     * /suReloadコマンド実行時処理． 設定・ロケール・LangManager再初期化．
      *
      * @param context コマンド実行コンテキスト
      * @return コマンド実行結果
@@ -62,15 +61,13 @@ public class ServerUtilsReloadCommand {
             WebhookSender.initialize();
         }
 
-        context.getSource().sendFeedback(() ->
-            Text.literal(ServerUtils.LANG.get("serverutils.prefix") + ServerUtils.LANG.get("config.reload")), false);
+        context.getSource()
+                .sendFeedback(
+                        () ->
+                                Text.literal(
+                                        ServerUtils.LANG.get("serverutils.prefix")
+                                                + ServerUtils.LANG.get("config.reload")),
+                        false);
         return Command.SINGLE_SUCCESS;
     }
 }
-
-
-
-
-
-
-

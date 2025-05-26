@@ -2,9 +2,11 @@ package io.github.keufcp.utils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
 import io.github.keufcp.ServerUtils;
 import io.github.keufcp.ServerUtilsMidnightConfig;
 import io.github.keufcp.commands.UptimeCommand;
+
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -20,25 +22,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Discord Webhookを用いたサーバー情報送信クラス．
- * <p>
- * cron式指定間隔でのWebhook送信．
- * {@link ServerUtilsMidnightConfig#webhookCronExpression} で送信間隔設定可能．
- * </p>
+ *
+ * <p>cron式指定間隔でのWebhook送信． {@link ServerUtilsMidnightConfig#webhookCronExpression} で送信間隔設定可能．
  */
 public class WebhookSender {
     /** MOD名称．Webhook送信者名として利用 */
     private static final String MOD_NAME = "ServerUtils";
+
     /** WebhookSender初期化済みフラグ */
     private static final AtomicBoolean initialized = new AtomicBoolean(false);
+
     /** Webhook送信用Quartzスケジューラー */
     private static Scheduler scheduler;
 
     /**
      * WebhookSender初期化とスケジューラーセットアップ．
-     * <p>
-     * 設定ファイルに基づくWebhook送信有効時，指定cron式に従った定期的Webhook送信ジョブのスケジュール．
-     * 初期化済みの場合，一度シャットダウン後の再初期化．
-     * </p>
+     *
+     * <p>設定ファイルに基づくWebhook送信有効時，指定cron式に従った定期的Webhook送信ジョブのスケジュール． 初期化済みの場合，一度シャットダウン後の再初期化．
      */
     public static void initialize() {
         // リロード時対応のため，初期化済みの場合，一度シャットダウン
@@ -47,8 +47,8 @@ public class WebhookSender {
             initialized.set(false);
         }
 
-        if (!ServerUtilsMidnightConfig.enableSendWebhook ||
-            ServerUtilsMidnightConfig.webhookUrl.isEmpty()) {
+        if (!ServerUtilsMidnightConfig.enableSendWebhook
+                || ServerUtilsMidnightConfig.webhookUrl.isEmpty()) {
             ServerUtils.LOGGER.info("Webhook sending is disabled or URL not configured.");
             return;
         }
@@ -59,25 +59,30 @@ public class WebhookSender {
             scheduler = schedulerFactory.getScheduler();
 
             // WebhookJob設定
-            JobDetail job = JobBuilder.newJob(WebhookJob.class)
-                .withIdentity("webhookJob", "serverutils")
-                .storeDurably()
-                .build();
+            JobDetail job =
+                    JobBuilder.newJob(WebhookJob.class)
+                            .withIdentity("webhookJob", "serverutils")
+                            .storeDurably()
+                            .build();
 
             // Webhook cron式からの送信間隔設定
-            Trigger trigger = TriggerBuilder.newTrigger()
-                .withIdentity("webhookTrigger", "serverutils")
-                .forJob(job)
-                .withSchedule(CronScheduleBuilder.cronSchedule(ServerUtilsMidnightConfig.webhookCronExpression))
-                .build();
+            Trigger trigger =
+                    TriggerBuilder.newTrigger()
+                            .withIdentity("webhookTrigger", "serverutils")
+                            .forJob(job)
+                            .withSchedule(
+                                    CronScheduleBuilder.cronSchedule(
+                                            ServerUtilsMidnightConfig.webhookCronExpression))
+                            .build();
 
             // スケジューラーへのジョブとトリガー登録
             scheduler.scheduleJob(job, trigger);
             scheduler.start();
             initialized.set(true);
 
-            ServerUtils.LOGGER.info("Webhook scheduler initialized with cron: {}",
-                ServerUtilsMidnightConfig.webhookCronExpression);
+            ServerUtils.LOGGER.info(
+                    "Webhook scheduler initialized with cron: {}",
+                    ServerUtilsMidnightConfig.webhookCronExpression);
         } catch (SchedulerException e) {
             ServerUtils.LOGGER.error("Failed to initialize webhook scheduler", e);
         }
@@ -85,9 +90,8 @@ public class WebhookSender {
 
     /**
      * WebhookSenderスケジューラー停止処理．
-     * <p>
-     * 実行中ジョブの中断とスケジューラーのシャットダウン．
-     * </p>
+     *
+     * <p>実行中ジョブの中断とスケジューラーのシャットダウン．
      */
     public static void shutdown() {
         if (scheduler != null) {
@@ -102,35 +106,36 @@ public class WebhookSender {
 
     /**
      * 手動でのWebhook送信．
-     * <p>
-     * 設定ファイルでのWebhook送信有効かつURL設定時，
-     * サーバー情報埋め込みWebhookメッセージの送信．
-     * </p>
+     *
+     * <p>設定ファイルでのWebhook送信有効かつURL設定時， サーバー情報埋め込みWebhookメッセージの送信．
      *
      * @return 送信成功時は {@code true}，失敗時は {@code false}
      */
     public static boolean sendWebhook() {
-        if (!ServerUtilsMidnightConfig.enableSendWebhook ||
-            ServerUtilsMidnightConfig.webhookUrl.isEmpty()) {
+        if (!ServerUtilsMidnightConfig.enableSendWebhook
+                || ServerUtilsMidnightConfig.webhookUrl.isEmpty()) {
             return false;
         }
 
         try {
-            HttpClient client = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(10))
-                .build();
+            HttpClient client =
+                    HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
 
             // Webhookペイロード作成
             String jsonPayload = buildWebhookPayload();
 
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(ServerUtilsMidnightConfig.webhookUrl))
-                .header("Content-Type", "application/json")
-                .header("User-Agent", "ServerUtils-Webhook")
-                .POST(HttpRequest.BodyPublishers.ofString(jsonPayload, StandardCharsets.UTF_8))
-                .build();
+            HttpRequest request =
+                    HttpRequest.newBuilder()
+                            .uri(URI.create(ServerUtilsMidnightConfig.webhookUrl))
+                            .header("Content-Type", "application/json")
+                            .header("User-Agent", "ServerUtils-Webhook")
+                            .POST(
+                                    HttpRequest.BodyPublishers.ofString(
+                                            jsonPayload, StandardCharsets.UTF_8))
+                            .build();
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response =
+                    client.send(request, HttpResponse.BodyHandlers.ofString());
 
             return response.statusCode() >= 200 && response.statusCode() < 300;
         } catch (IOException | InterruptedException e) {
@@ -141,9 +146,8 @@ public class WebhookSender {
 
     /**
      * Discord Webhook送信用JSONペイロード構築．
-     * <p>
-     * サーバー稼働時間等情報を含むembedメッセージ作成．
-     * </p>
+     *
+     * <p>サーバー稼働時間等情報を含むembedメッセージ作成．
      *
      * @return Webhook送信用構築済みJSON文字列
      */
@@ -196,9 +200,8 @@ public class WebhookSender {
 
     /**
      * Quartzスケジューラーによる定期的Webhook送信ジョブ．
-     * <p>
-     * ジョブ実行時，{@link WebhookSender#sendWebhook()} メソッド呼出によるWebhookメッセージ送信．
-     * </p>
+     *
+     * <p>ジョブ実行時，{@link WebhookSender#sendWebhook()} メソッド呼出によるWebhookメッセージ送信．
      */
     public static class WebhookJob implements Job {
         /**

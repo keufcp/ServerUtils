@@ -1,15 +1,14 @@
 package io.github.keufcp.utils;
 
 import io.github.keufcp.ServerUtils;
+
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.World;
 
-/**
- * MobCap情報の取得と処理を担当するクラス.
- */
+/** MobCap情報の取得と処理を担当するクラス. */
 public class MobCapProcessor {
 
     public static final int SPAWN_CHUNK_AREA_CONSTANT = 17 * 17; // スポーンチャンクエリアの定数 (289)
@@ -27,14 +26,16 @@ public class MobCapProcessor {
             return new MobCapInfo(0, 0, 0, SpawnGroup.MONSTER.getCapacity(), false, false);
         }
 
-        long currentMonsterCount = spawnHelperInfo.getGroupToCount().getOrDefault(SpawnGroup.MONSTER, 0);
+        long currentMonsterCount =
+                spawnHelperInfo.getGroupToCount().getOrDefault(SpawnGroup.MONSTER, 0);
         int spawnChunkCount = spawnHelperInfo.getSpawningChunkCount();
         int capacity = SpawnGroup.MONSTER.getCapacity();
 
         int mobCap = calculateMobCap(spawnChunkCount, capacity);
         boolean hasZeroChunkWarning = (spawnChunkCount == 0);
 
-        return new MobCapInfo(currentMonsterCount, mobCap, spawnChunkCount, capacity, true, hasZeroChunkWarning);
+        return new MobCapInfo(
+                currentMonsterCount, mobCap, spawnChunkCount, capacity, true, hasZeroChunkWarning);
     }
 
     /**
@@ -74,9 +75,7 @@ public class MobCapProcessor {
         return 0;
     }
 
-    /**
-     * MobCap情報を格納するデータクラス.
-     */
+    /** MobCap情報を格納するデータクラス. */
     public static class MobCapInfo {
         private final long currentMonsterCount;
         private final int mobCap;
@@ -85,8 +84,13 @@ public class MobCapProcessor {
         private final boolean hasValidInfo;
         private final boolean hasZeroChunkWarning;
 
-        public MobCapInfo(long currentMonsterCount, int mobCap, int spawnChunkCount,
-                          int capacity, boolean hasValidInfo, boolean hasZeroChunkWarning) {
+        public MobCapInfo(
+                long currentMonsterCount,
+                int mobCap,
+                int spawnChunkCount,
+                int capacity,
+                boolean hasValidInfo,
+                boolean hasZeroChunkWarning) {
             this.currentMonsterCount = currentMonsterCount;
             this.mobCap = mobCap;
             this.spawnChunkCount = spawnChunkCount;
@@ -95,11 +99,28 @@ public class MobCapProcessor {
             this.hasZeroChunkWarning = hasZeroChunkWarning;
         }
 
-        public long getCurrentMonsterCount() { return currentMonsterCount; }
-        public int getMobCap() { return mobCap; }
-        public int getSpawnChunkCount() { return spawnChunkCount; }
-        public int getCapacity() { return capacity; }
-        public boolean hasValidInfo() { return hasValidInfo; }
-        public boolean hasZeroChunkWarning() { return hasZeroChunkWarning; }
+        public long getCurrentMonsterCount() {
+            return currentMonsterCount;
+        }
+
+        public int getMobCap() {
+            return mobCap;
+        }
+
+        public int getSpawnChunkCount() {
+            return spawnChunkCount;
+        }
+
+        public int getCapacity() {
+            return capacity;
+        }
+
+        public boolean hasValidInfo() {
+            return hasValidInfo;
+        }
+
+        public boolean hasZeroChunkWarning() {
+            return hasZeroChunkWarning;
+        }
     }
 }

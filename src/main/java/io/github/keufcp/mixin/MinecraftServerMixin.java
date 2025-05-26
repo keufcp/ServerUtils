@@ -1,16 +1,15 @@
 package io.github.keufcp.mixin;
 
 import io.github.keufcp.utils.TickTimeUtil;
+
 import net.minecraft.server.MinecraftServer;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/**
- * MinecraftServerクラスへのMixin．
- * サーバーTick処理にフックし，Tick時間を記録．
- */
+/** MinecraftServerクラスへのMixin． サーバーTick処理にフックし，Tick時間を記録． */
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin {
 
@@ -18,8 +17,7 @@ public class MinecraftServerMixin {
     private static final ThreadLocal<Long> tickStartTime = new ThreadLocal<>();
 
     /**
-     * サーバーTick毎処理メソッドの先頭へのインジェクション．
-     * Tick開始時間を記録．
+     * サーバーTick毎処理メソッドの先頭へのインジェクション． Tick開始時間を記録．
      *
      * @param ci コールバック情報
      */
@@ -30,8 +28,7 @@ public class MinecraftServerMixin {
     }
 
     /**
-     * サーバーTick毎処理メソッドの末尾へのインジェクション．
-     * Tick処理時間を計算し {@link TickTimeUtil} へ追加．
+     * サーバーTick毎処理メソッドの末尾へのインジェクション． Tick処理時間を計算し {@link TickTimeUtil} へ追加．
      *
      * @param ci コールバック情報
      */
