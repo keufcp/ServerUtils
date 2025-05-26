@@ -5,11 +5,12 @@ import eu.midnightdust.lib.config.MidnightConfig;
 /**
  * ServerUtils設定クラス．
  * <p>
- * MidnightConfig継承によるMOD各種設定（言語・Webhook等）管理．
+ * MidnightConfig継承によるMOD各種設定（言語・コマンド権限・Webhook等）管理．
  * </p>
  * <ul>
  *   <li>locale: 使用言語コード
  *   <li>uptimePermissionLevel: uptimeコマンド実行権限レベル
+ *   <li>mobcapPermissionLevel: mobcapコマンド実行権限レベル
  *   <li>enableSendWebhook: Webhook送信有効化
  *   <li>webhookUrl: Webhook送信先URL
  *   <li>webhookCronExpression: Webhook送信間隔（cron式）
@@ -37,6 +38,22 @@ public class ServerUtilsMidnightConfig extends MidnightConfig {
     @Entry
     public static int uptimePermissionLevel = 4;
 
+    /**
+     * mobcapコマンド実行権限レベル．
+     * <p>
+     * 権限レベル一覧：
+     * </p>
+     * <ul>
+     *     <li>レベル0: 全プレイヤー
+     *     <li>レベル1: モデレーター
+     *     <li>レベル2: ゲームマスター
+     *     <li>レベル3: 管理者
+     *     <li>レベル4: オーナー (フルOP，デフォルト)
+     * </ul>
+     */
+    @Entry
+    public static int mobcapPermissionLevel = 4;
+
     /** Webhook送信有効化フラグ */
     @Entry
     public static boolean enableSendWebhook = false;
@@ -50,6 +67,10 @@ public class ServerUtilsMidnightConfig extends MidnightConfig {
     @Entry
     public static String webhookCronExpression = "0 0 0 * * ?";
 
+    /** 色付きテキスト出力有効化フラグ */
+    @Entry
+    public static boolean enableColoredOutput = true;
+
     /**
      * 全バリデーション実行．
      * <p>
@@ -61,6 +82,7 @@ public class ServerUtilsMidnightConfig extends MidnightConfig {
         // 各バリデーション実行
         validateLocale();
         validateUptimePermissionLevel();
+        validateMobcapPermissionLevel();
         validateEnableSendWebhook();
         validateWebhookUrl();
         validateWebhookCronExpression();
@@ -99,6 +121,20 @@ public class ServerUtilsMidnightConfig extends MidnightConfig {
         if (uptimePermissionLevel < 0 || uptimePermissionLevel > 4) {
             uptimePermissionLevel = 4;
             ServerUtils.LOGGER.warn("Invalid permission level for uptime command. Reset to default: 4 (Owner)");
+        }
+    }
+
+    /**
+     * mobcapコマンド実行権限レベルバリデーション．
+     * <p>
+     * 権限レベル0〜4範囲外の場合，デフォルト値4（オーナー権限）へリセット．
+     * サーバー起動時やリロード時呼出．
+     * </p>
+     */
+    public static void validateMobcapPermissionLevel() {
+        if (mobcapPermissionLevel < 0 || mobcapPermissionLevel > 4) {
+            mobcapPermissionLevel = 4;
+            ServerUtils.LOGGER.warn("Invalid permission level for mobcap command. Reset to default: 4 (Owner)");
         }
     }
 

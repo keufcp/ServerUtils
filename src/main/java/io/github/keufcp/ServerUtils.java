@@ -5,6 +5,7 @@ import io.github.keufcp.commands.ServerUtilsReloadCommand;
 import io.github.keufcp.commands.ServerUtilsTpsCommand;
 import io.github.keufcp.commands.UptimeCommand;
 import io.github.keufcp.commands.ServerUtilsMsptCommand;
+import io.github.keufcp.commands.ServerUtilsMobCapCommand;
 import io.github.keufcp.utils.WebhookSender;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -51,6 +52,7 @@ public class ServerUtils implements ModInitializer {
         ServerUtilsTpsCommand.register();
         ServerUtilsReloadCommand.register();
         ServerUtilsMsptCommand.register();
+        ServerUtilsMobCapCommand.register();
 
         if (ServerUtilsMidnightConfig.enableSendWebhook) {
             WebhookSender.initialize();
