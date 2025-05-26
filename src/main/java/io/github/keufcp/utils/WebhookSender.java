@@ -7,13 +7,12 @@ import io.github.keufcp.ServerUtils;
 import io.github.keufcp.ServerUtilsMidnightConfig;
 import io.github.keufcp.commands.UptimeCommand;
 
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
-
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
 import java.io.IOException;
 import java.net.URI;
@@ -71,9 +70,10 @@ public class WebhookSender {
         }
 
         // サーバー起動時にインスタンスを設定
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            setServerInstance(server);
-        });
+        ServerLifecycleEvents.SERVER_STARTED.register(
+                server -> {
+                    setServerInstance(server);
+                });
 
         try {
             // Quartzスケジューラー初期化
@@ -200,7 +200,9 @@ public class WebhookSender {
             playersField.addProperty("name", ServerUtils.LANG.get("webhook.players.title"));
             int currentPlayers = server.getCurrentPlayerCount();
             int maxPlayers = server.getMaxPlayerCount();
-            playersField.addProperty("value", ServerUtils.LANG.get("webhook.players.value", currentPlayers, maxPlayers));
+            playersField.addProperty(
+                    "value",
+                    ServerUtils.LANG.get("webhook.players.value", currentPlayers, maxPlayers));
             playersField.addProperty("inline", true);
             fields.add(playersField);
 
@@ -209,8 +211,13 @@ public class WebhookSender {
             performanceField.addProperty("name", ServerUtils.LANG.get("webhook.performance.title"));
             double tps = TickTimeUtil.calculateTPS();
             double mspt = TickTimeUtil.getMeanTickTime();
-            String performanceValue = "TPS: `" + String.format("%.2f", tps) + "`\n" +
-                                    "MSPT: `" + String.format("%.2f", mspt) + " ms`";
+            String performanceValue =
+                    "TPS: `"
+                            + String.format("%.2f", tps)
+                            + "`\n"
+                            + "MSPT: `"
+                            + String.format("%.2f", mspt)
+                            + " ms`";
             performanceField.addProperty("value", performanceValue);
             performanceField.addProperty("inline", true);
             fields.add(performanceField);
@@ -227,9 +234,12 @@ public class WebhookSender {
                     if (mobCapValue.length() > 0) {
                         mobCapValue.append("\n");
                     }
-                    mobCapValue.append(dimensionName).append(": ")
-                        .append(info.getCurrentMonsterCount()).append("/")
-                        .append(info.getMobCap());
+                    mobCapValue
+                            .append(dimensionName)
+                            .append(": ")
+                            .append(info.getCurrentMonsterCount())
+                            .append("/")
+                            .append(info.getMobCap());
                 }
             }
 
