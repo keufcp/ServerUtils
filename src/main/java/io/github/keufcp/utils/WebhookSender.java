@@ -7,8 +7,13 @@ import io.github.keufcp.ServerUtils;
 import io.github.keufcp.ServerUtilsMidnightConfig;
 import io.github.keufcp.commands.UptimeCommand;
 
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
+
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
+
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
 import java.io.IOException;
 import java.net.URI;
@@ -35,6 +40,18 @@ public class WebhookSender {
     /** Webhook送信用Quartzスケジューラー */
     private static Scheduler scheduler;
 
+    /** サーバーインスタンス参照 */
+    private static MinecraftServer serverInstance;
+
+    /**
+     * サーバーインスタンスを設定する．
+     *
+     * @param server サーバーインスタンス
+     */
+    public static void setServerInstance(MinecraftServer server) {
+        serverInstance = server;
+    }
+
     /**
      * WebhookSender初期化とスケジューラーセットアップ．
      *
@@ -52,6 +69,11 @@ public class WebhookSender {
             ServerUtils.LOGGER.info("Webhook sending is disabled or URL not configured.");
             return;
         }
+
+        // サーバー起動時にインスタンスを設定
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            setServerInstance(server);
+        });
 
         try {
             // Quartzスケジューラー初期化
@@ -147,7 +169,7 @@ public class WebhookSender {
     /**
      * Discord Webhook送信用JSONペイロード構築．
      *
-     * <p>サーバー稼働時間等情報を含むembedメッセージ作成．
+     * <p>サーバー稼働時間、プレイヤー数、パフォーマンス、MobCap情報等を含むembedメッセージ作成．
      *
      * @return Webhook送信用構築済みJSON文字列
      */
@@ -161,10 +183,6 @@ public class WebhookSender {
         JsonArray embeds = new JsonArray();
         JsonObject embed = new JsonObject();
 
-        // サーバー稼働時間情報取得
-        List<Long> uptimeList = UptimeCommand.calculateUptime();
-        String uptimeValue = UptimeCommand.formatUptimeValue(uptimeList);
-
         // embed一般設定
         embed.addProperty("title", ServerUtils.LANG.get("webhook.title"));
         embed.addProperty("description", ServerUtils.LANG.get("webhook.description"));
@@ -172,6 +190,57 @@ public class WebhookSender {
 
         // fields配列作成
         JsonArray fields = new JsonArray();
+
+        // サーバーインスタンス取得
+        MinecraftServer server = serverInstance;
+
+        if (server != null) {
+            // プレイヤー数フィールド追加
+            JsonObject playersField = new JsonObject();
+            playersField.addProperty("name", ServerUtils.LANG.get("webhook.players.title"));
+            int currentPlayers = server.getCurrentPlayerCount();
+            int maxPlayers = server.getMaxPlayerCount();
+            playersField.addProperty("value", ServerUtils.LANG.get("webhook.players.value", currentPlayers, maxPlayers));
+            playersField.addProperty("inline", true);
+            fields.add(playersField);
+
+            // パフォーマンスフィールド追加
+            JsonObject performanceField = new JsonObject();
+            performanceField.addProperty("name", ServerUtils.LANG.get("webhook.performance.title"));
+            double tps = TickTimeUtil.calculateTPS();
+            double mspt = TickTimeUtil.getMeanTickTime();
+            String performanceValue = "TPS: `" + String.format("%.2f", tps) + "`\n" +
+                                    "MSPT: `" + String.format("%.2f", mspt) + " ms`";
+            performanceField.addProperty("value", performanceValue);
+            performanceField.addProperty("inline", true);
+            fields.add(performanceField);
+
+            // MobCap情報フィールド追加
+            JsonObject mobCapField = new JsonObject();
+            mobCapField.addProperty("name", ServerUtils.LANG.get("webhook.mobcap.title"));
+            StringBuilder mobCapValue = new StringBuilder();
+
+            for (ServerWorld world : server.getWorlds()) {
+                String dimensionName = MobCapProcessor.getDisplayDimensionName(world);
+                MobCapProcessor.MobCapInfo info = MobCapProcessor.getMobCapInfo(world);
+                if (info.hasValidInfo()) {
+                    if (mobCapValue.length() > 0) {
+                        mobCapValue.append("\n");
+                    }
+                    mobCapValue.append(dimensionName).append(": ")
+                        .append(info.getCurrentMonsterCount()).append("/")
+                        .append(info.getMobCap());
+                }
+            }
+
+            mobCapField.addProperty("value", mobCapValue.toString());
+            mobCapField.addProperty("inline", true);
+            fields.add(mobCapField);
+        }
+
+        // サーバー稼働時間情報取得（既存の処理を最後に配置）
+        List<Long> uptimeList = UptimeCommand.calculateUptime();
+        String uptimeValue = UptimeCommand.formatUptimeValue(uptimeList);
 
         // 稼働時間フィールド追加
         JsonObject uptimeField = new JsonObject();
