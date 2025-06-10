@@ -1,6 +1,7 @@
 package io.github.keufcp.utils;
 
 import io.github.keufcp.ServerUtilsMidnightConfig;
+
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;

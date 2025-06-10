@@ -1,13 +1,15 @@
 package io.github.keufcp.utils;
 
 import io.github.keufcp.ServerUtils;
-import java.util.ArrayList;
-import java.util.List;
+
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** MobCap情報の出力フォーマッティングを担当するクラス． */
 public class MobCapFormatter {
