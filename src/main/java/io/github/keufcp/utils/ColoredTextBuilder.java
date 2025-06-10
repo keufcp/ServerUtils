@@ -1,7 +1,6 @@
 package io.github.keufcp.utils;
 
 import io.github.keufcp.ServerUtilsMidnightConfig;
-
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -21,12 +20,10 @@ public class ColoredTextBuilder {
      * @return 色付きテキストが有効な場合はtrue
      */
     public static boolean shouldUseColoredText(ServerCommandSource source) {
-        // 設定で無効化されている場合はfalse
         if (!ServerUtilsMidnightConfig.enableColoredOutput) {
             return false;
         }
 
-        // プレイヤーからの実行でない場合（コンソールなど）はfalse
         return source.getEntity() != null;
     }
 
@@ -58,13 +55,13 @@ public class ColoredTextBuilder {
          */
         public static Formatting getNumeratorColor(long numerator, int denominator) {
             if (denominator == 0) {
-                return Formatting.GRAY; // 分母が0の場合
+                return Formatting.GRAY;
             }
 
             if (numerator > denominator) {
-                return Formatting.RED; // 上限超過
+                return Formatting.RED;
             } else {
-                return Formatting.GREEN; // 正常範囲
+                return Formatting.GREEN;
             }
         }
 
@@ -78,12 +75,12 @@ public class ColoredTextBuilder {
         public static Formatting getDenominatorColor(int denominator, boolean isValidState) {
             if (denominator == 0) {
                 if (isValidState) {
-                    return Formatting.GRAY; // 正常な0状態
+                    return Formatting.GRAY;
                 } else {
-                    return Formatting.RED; // 異常な0状態
+                    return Formatting.RED;
                 }
             } else {
-                return Formatting.WHITE; // 正常値
+                return Formatting.WHITE;
             }
         }
     }
@@ -99,15 +96,15 @@ public class ColoredTextBuilder {
          */
         public static Formatting getPercentageColor(double percentage) {
             if (percentage >= 1.0) {
-                return Formatting.RED; // 100%以上
+                return Formatting.RED;
             } else if (percentage >= 0.9) {
-                return Formatting.YELLOW; // 90%以上
+                return Formatting.YELLOW;
             } else if (percentage >= 0.7) {
-                return Formatting.GREEN; // 70%以上
+                return Formatting.GREEN;
             } else if (percentage >= 0.5) {
-                return Formatting.DARK_GREEN; // 50%以上
+                return Formatting.DARK_GREEN;
             } else {
-                return Formatting.AQUA; // 50%未満
+                return Formatting.AQUA;
             }
         }
     }
@@ -167,6 +164,17 @@ public class ColoredTextBuilder {
          */
         public static Formatting getNormalColor() {
             return Formatting.WHITE;
+        }
+
+        /**
+         * タイトル表示用の色を取得する．
+         *
+         * <p>重要な見出しやタイトルに使用される濃い紫色を返す． 他の状態色（エラー、警告、情報など）と区別するために、 目立ちやすく権威のある印象を与える色として選択されている．
+         *
+         * @return タイトル用フォーマット（DARK_PURPLE）
+         */
+        public static Formatting getTitleColor() {
+            return Formatting.DARK_PURPLE;
         }
     }
 
