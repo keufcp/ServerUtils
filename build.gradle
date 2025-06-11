@@ -1,6 +1,7 @@
 plugins {
     id 'fabric-loom' version "${loom_version}"
     id 'maven-publish'
+    id 'com.diffplug.spotless' version '6.25.0'
 }
 
 version = project.mod_version
@@ -106,7 +107,13 @@ publishing {
     }
 }
 
-
-
-
+spotless {
+    java {
+        target 'src/**/*.java'
+        googleJavaFormat()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
 
