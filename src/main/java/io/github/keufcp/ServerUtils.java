@@ -1,21 +1,17 @@
 package io.github.keufcp;
 
 import eu.midnightdust.lib.config.MidnightConfig;
-
 import io.github.keufcp.commands.ServerUtilsMobCapCommand;
 import io.github.keufcp.commands.ServerUtilsMsptCommand;
 import io.github.keufcp.commands.ServerUtilsReloadCommand;
 import io.github.keufcp.commands.ServerUtilsTpsCommand;
 import io.github.keufcp.commands.UptimeCommand;
 import io.github.keufcp.utils.WebhookSender;
-
+import java.util.Locale;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Locale;
 
 /**
  * ServerUtils MODメインクラス．
@@ -30,45 +26,45 @@ import java.util.Locale;
  * </ul>
  */
 public class ServerUtils implements ModInitializer {
-    /** MOD ID */
-    public static final String MOD_ID = "serverutils";
+  /** MOD ID */
+  public static final String MOD_ID = "serverutils";
 
-    /** MODロガー */
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+  /** MODロガー */
+  public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    /** 現在ロケール */
-    public static Locale LOCALE;
+  /** 現在ロケール */
+  public static Locale LOCALE;
 
-    /** サーバー起動時刻 (ミリ秒) */
-    public static long serverStartTimeMillis;
+  /** サーバー起動時刻 (ミリ秒) */
+  public static long serverStartTimeMillis;
 
-    /** 言語マネージャー */
-    public static LangManager LANG;
+  /** 言語マネージャー */
+  public static LangManager LANG;
 
-    @Override
-    public void onInitialize() {
-        LOGGER.info("{} is initialized.", MOD_ID);
-        serverStartTimeMillis = System.currentTimeMillis();
-        MidnightConfig.init(MOD_ID, ServerUtilsMidnightConfig.class);
-        ServerUtilsMidnightConfig.validateAll();
-        String localeCode = ServerUtilsMidnightConfig.locale;
-        LOCALE = Locale.forLanguageTag(localeCode);
-        LANG = new LangManager(localeCode);
-        UptimeCommand.register();
-        ServerUtilsTpsCommand.register();
-        ServerUtilsReloadCommand.register();
-        ServerUtilsMsptCommand.register();
-        ServerUtilsMobCapCommand.register();
+  @Override
+  public void onInitialize() {
+    LOGGER.info("{} is initialized.", MOD_ID);
+    serverStartTimeMillis = System.currentTimeMillis();
+    MidnightConfig.init(MOD_ID, ServerUtilsMidnightConfig.class);
+    ServerUtilsMidnightConfig.validateAll();
+    String localeCode = ServerUtilsMidnightConfig.locale;
+    LOCALE = Locale.forLanguageTag(localeCode);
+    LANG = new LangManager(localeCode);
+    UptimeCommand.register();
+    ServerUtilsTpsCommand.register();
+    ServerUtilsReloadCommand.register();
+    ServerUtilsMsptCommand.register();
+    ServerUtilsMobCapCommand.register();
 
-        if (ServerUtilsMidnightConfig.enableSendWebhook) {
-            WebhookSender.initialize();
-        }
-
-        // サーバーシャットダウン時，WebhookSenderシャットダウンメソッド呼び出し
-        ServerLifecycleEvents.SERVER_STOPPING.register(
-                server -> {
-                    LOGGER.info("Server is stopping, shutting down webhook sender...");
-                    WebhookSender.shutdown();
-                });
+    if (ServerUtilsMidnightConfig.enableSendWebhook) {
+      WebhookSender.initialize();
     }
+
+    // サーバーシャットダウン時，WebhookSenderシャットダウンメソッド呼び出し
+    ServerLifecycleEvents.SERVER_STOPPING.register(
+        server -> {
+          LOGGER.info("Server is stopping, shutting down webhook sender...");
+          WebhookSender.shutdown();
+        });
+  }
 }
