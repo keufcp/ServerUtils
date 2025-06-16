@@ -53,7 +53,7 @@ jobs:
 
       - name: Commit and push changes
         if: steps.verify-changed-files.outputs.changed == 'true' && github.event_name == 'push'
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: "style: format Java code with Google Java Format via Spotless"
           file_pattern: "src/**/*.java"
