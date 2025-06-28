@@ -100,16 +100,28 @@ public class ServerUtilsMidnightConfig extends MidnightConfig {
   }
 
   /**
+   * 権限レベルを検証し，無効な場合はデフォルト値にリセットします．
+   *
+   * @param level 検証する権限レベル．
+   * @param commandName 関連するコマンド名（ログ出力用）．
+   * @return 有効な権限レベル．
+   */
+  private static int validatePermissionLevel(int level, String commandName) {
+    if (level < 0 || level > 4) {
+      ServerUtils.LOGGER.warn(
+          "Invalid permission level for " + commandName + " command. Reset to default: 4 (Owner)");
+      return 4;
+    }
+    return level;
+  }
+
+  /**
    * uptimeコマンド実行権限レベルバリデーション．
    *
    * <p>権限レベル0〜4範囲外の場合，デフォルト値4（オーナー権限）へリセット． サーバー起動時やリロード時呼出．
    */
   public static void validateUptimePermissionLevel() {
-    if (uptimePermissionLevel < 0 || uptimePermissionLevel > 4) {
-      uptimePermissionLevel = 4;
-      ServerUtils.LOGGER.warn(
-          "Invalid permission level for uptime command. Reset to default: 4 (Owner)");
-    }
+    uptimePermissionLevel = validatePermissionLevel(uptimePermissionLevel, "uptime");
   }
 
   /**
@@ -118,11 +130,7 @@ public class ServerUtilsMidnightConfig extends MidnightConfig {
    * <p>権限レベル0〜4範囲外の場合，デフォルト値4（オーナー権限）へリセット． サーバー起動時やリロード時呼出．
    */
   public static void validateMobcapPermissionLevel() {
-    if (mobcapPermissionLevel < 0 || mobcapPermissionLevel > 4) {
-      mobcapPermissionLevel = 4;
-      ServerUtils.LOGGER.warn(
-          "Invalid permission level for mobcap command. Reset to default: 4 (Owner)");
-    }
+    mobcapPermissionLevel = validatePermissionLevel(mobcapPermissionLevel, "mobcap");
   }
 
   /**
