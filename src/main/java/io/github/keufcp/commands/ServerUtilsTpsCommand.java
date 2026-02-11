@@ -48,15 +48,18 @@ public class ServerUtilsTpsCommand {
     // 色付きテキストを使用する場合
     if (ColoredTextBuilder.shouldUseColoredText(source)) {
       Formatting tpsColor = getTpsColor(tps);
-      
-      MutableText message = Text.literal(ServerUtils.LANG.get("serverutils.prefix"))
-          .append(Text.literal("TPS: ").formatted(ModStyle.LABEL))
-          .append(
-              Text.literal(tpsFormatted)
-                  .formatted(tpsColor)
-                  .styled(style -> style.withClickEvent(
-                      new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/suMspt"))));
-      
+
+      MutableText message =
+          Text.literal(ServerUtils.LANG.get("serverutils.prefix"))
+              .append(Text.literal("TPS: ").formatted(ModStyle.LABEL))
+              .append(
+                  Text.literal(tpsFormatted)
+                      .formatted(tpsColor)
+                      .styled(
+                          style ->
+                              style.withClickEvent(
+                                  new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/suMspt"))));
+
       source.sendMessage(message);
     } else {
       // プレーンテキスト出力
@@ -75,11 +78,11 @@ public class ServerUtilsTpsCommand {
    */
   private static Formatting getTpsColor(double tps) {
     if (tps >= 19.5) {
-      return ModStyle.VALUE_GOOD;  // 緑: 良好
+      return ModStyle.VALUE_GOOD; // 緑: 良好
     } else if (tps >= 17.0) {
-      return ModStyle.VALUE_WARN;  // 黄: 警告
+      return ModStyle.VALUE_WARN; // 黄: 警告
     } else {
-      return ModStyle.VALUE_BAD;   // 赤: 危険
+      return ModStyle.VALUE_BAD; // 赤: 危険
     }
   }
 }

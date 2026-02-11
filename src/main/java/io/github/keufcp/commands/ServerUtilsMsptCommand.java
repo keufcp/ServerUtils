@@ -47,11 +47,12 @@ public class ServerUtilsMsptCommand {
     // 色付きテキストを使用する場合
     if (ColoredTextBuilder.shouldUseColoredText(source)) {
       Formatting msptColor = getMsptColor(mspt);
-      
-      MutableText message = Text.literal(ServerUtils.LANG.get("serverutils.prefix"))
-          .append(Text.literal("MSPT: ").formatted(ModStyle.LABEL))
-          .append(Text.literal(msptFormatted + " ms").formatted(msptColor));
-      
+
+      MutableText message =
+          Text.literal(ServerUtils.LANG.get("serverutils.prefix"))
+              .append(Text.literal("MSPT: ").formatted(ModStyle.LABEL))
+              .append(Text.literal(msptFormatted + " ms").formatted(msptColor));
+
       source.sendMessage(message);
     } else {
       // プレーンテキスト出力
@@ -70,11 +71,11 @@ public class ServerUtilsMsptCommand {
    */
   private static Formatting getMsptColor(double mspt) {
     if (mspt <= 40.0) {
-      return ModStyle.VALUE_GOOD;  // 緑: 良好 (40ms以下)
+      return ModStyle.VALUE_GOOD; // 緑: 良好 (40ms以下)
     } else if (mspt <= 50.0) {
-      return ModStyle.VALUE_WARN;  // 黄: 警告 (40-50ms)
+      return ModStyle.VALUE_WARN; // 黄: 警告 (40-50ms)
     } else {
-      return ModStyle.VALUE_BAD;   // 赤: 危険 (50ms以上)
+      return ModStyle.VALUE_BAD; // 赤: 危険 (50ms以上)
     }
   }
 }

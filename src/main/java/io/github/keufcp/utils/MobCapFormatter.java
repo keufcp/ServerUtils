@@ -16,8 +16,7 @@ public class MobCapFormatter {
   /** 全ディメンションのMobCap情報を色付きテキストで作成する． */
   public static Text createColoredAllDimensionsOutput(ServerCommandSource source, boolean debug) {
     ColoredTextBuilder.Builder builder = new ColoredTextBuilder.Builder();
-    builder.appendLine(
-        ServerUtils.LANG.get("mobcap.title.all"), ModStyle.CLICKABLE);
+    builder.appendLine(ServerUtils.LANG.get("mobcap.title.all"), ModStyle.CLICKABLE);
 
     List<RegistryKey<World>> worldKeys = new ArrayList<>(source.getServer().getWorldRegistryKeys());
     for (int i = 0; i < worldKeys.size(); i++) {
@@ -36,8 +35,7 @@ public class MobCapFormatter {
       ServerWorld world, String dimensionDisplayName, boolean debug) {
     ColoredTextBuilder.Builder builder = new ColoredTextBuilder.Builder();
     builder.appendLine(
-        ServerUtils.LANG.get("mobcap.title.single", dimensionDisplayName),
-        ModStyle.CLICKABLE);
+        ServerUtils.LANG.get("mobcap.title.single", dimensionDisplayName), ModStyle.CLICKABLE);
     builder.append(createColoredDimensionMobCapInfo(world, debug, true));
     return builder.build();
   }
@@ -77,9 +75,7 @@ public class MobCapFormatter {
 
     if (!info.hasValidInfo()) {
       return builder
-          .appendLine(
-              ServerUtils.LANG.get("mobcap.error.spawn_info"),
-              ModStyle.VALUE_BAD)
+          .appendLine(ServerUtils.LANG.get("mobcap.error.spawn_info"), ModStyle.VALUE_BAD)
           .build();
     }
 
@@ -88,18 +84,23 @@ public class MobCapFormatter {
         .append(
             Text.literal(dimensionDisplayName)
                 .formatted(ModStyle.CLICKABLE)
-                .styled(style -> style.withClickEvent(
-                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, 
-                        "/suMobCap " + dimensionId + " debug"))))
+                .styled(
+                    style ->
+                        style.withClickEvent(
+                            new ClickEvent(
+                                ClickEvent.Action.RUN_COMMAND,
+                                "/suMobCap " + dimensionId + " debug"))))
         .append(": ", ModStyle.VALUE_NORMAL)
         .append(
             String.valueOf(info.getCurrentMonsterCount()),
-            info.getCurrentMonsterCount() > info.getMobCap() ? ModStyle.VALUE_BAD : ModStyle.VALUE_GOOD)
+            info.getCurrentMonsterCount() > info.getMobCap()
+                ? ModStyle.VALUE_BAD
+                : ModStyle.VALUE_GOOD)
         .append("/", ModStyle.VALUE_NORMAL)
         .append(
             String.valueOf(info.getMobCap()),
-            info.getMobCap() == 0 && info.getSpawnChunkCount() == 0 
-                ? ModStyle.LABEL 
+            info.getMobCap() == 0 && info.getSpawnChunkCount() == 0
+                ? ModStyle.LABEL
                 : (info.getMobCap() == 0 ? ModStyle.VALUE_BAD : ModStyle.VALUE_NORMAL));
 
     if (debug) {
@@ -117,9 +118,7 @@ public class MobCapFormatter {
     if (info.hasZeroChunkWarning()) {
       builder
           .append(" - ", ModStyle.VALUE_NORMAL)
-          .append(
-              ServerUtils.LANG.get("mobcap.warning.zero_chunks"),
-              ModStyle.VALUE_WARN);
+          .append(ServerUtils.LANG.get("mobcap.warning.zero_chunks"), ModStyle.VALUE_WARN);
     }
 
     if (!isLast) {
