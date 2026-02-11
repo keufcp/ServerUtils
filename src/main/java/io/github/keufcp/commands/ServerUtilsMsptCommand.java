@@ -38,11 +38,42 @@ public class ServerUtilsMsptCommand {
     ServerCommandSource source = context.getSource();
 
     double mspt = TickTimeUtil.getMeanTickTime();
+    String msptFormatted = String.format("%.2f", mspt);
 
-    String label = ServerUtils.LANG.get("mspt.result", String.format("%.2f", mspt));
+    if (io.github.keufcp.utils.ColoredTextBuilder.shouldUseColoredText(source)) {
+      // 色付きテキストを生成
+      io.github.keufcp.utils.ColoredTextBuilder.Builder builder =
+          new io.github.keufcp.utils.ColoredTextBuilder.Builder();
 
-    source.sendMessage(Text.of(label));
+      // [ServerUtils] MSPT: の部分
+      net.minecraft.util.Formatting msptColor = getMsptColor(mspt);
+      builder
+          .append("[ServerUtils] MSPT: ", io.github.keufcp.utils.ModStyle.LABEL)
+          .append(msptFormatted, msptColor);
+
+      source.sendMessage(builder.build());
+    } else {
+      // プレーンテキスト
+      String label = ServerUtils.LANG.get("mspt.result", msptFormatted);
+      source.sendMessage(Text.of(label));
+    }
 
     return Command.SINGLE_SUCCESS;
+  }
+
+  /**
+   * MSPT値に基づいて色を決定する．
+   *
+   * @param mspt MSPT値
+   * @return 適切な色フォーマット
+   */
+  private static net.minecraft.util.Formatting getMsptColor(double mspt) {
+    if (mspt <= 50.0) {
+      return io.github.keufcp.utils.ModStyle.VALUE_GOOD;
+    } else if (mspt <= 60.0) {
+      return io.github.keufcp.utils.ModStyle.VALUE_WARN;
+    } else {
+      return io.github.keufcp.utils.ModStyle.VALUE_BAD;
+    }
   }
 }

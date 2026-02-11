@@ -38,12 +38,60 @@ public class ServerUtilsTpsCommand {
     ServerCommandSource source = context.getSource();
 
     double tps = TickTimeUtil.calculateTPS();
+    String tpsFormatted = String.format("%.2f", tps);
 
-    String label = ServerUtils.LANG.get("tps.result", String.format("%.2f", tps));
+    if (io.github.keufcp.utils.ColoredTextBuilder.shouldUseColoredText(source)) {
+      // 色付きテキストを生成
+      io.github.keufcp.utils.ColoredTextBuilder.Builder builder =
+          new io.github.keufcp.utils.ColoredTextBuilder.Builder();
 
-    // TPS結果をプレイヤーに表示
-    source.sendMessage(Text.of(label));
+      // [ServerUtils] TPS: の部分
+      builder
+          .append("[ServerUtils] TPS: ", io.github.keufcp.utils.ModStyle.LABEL)
+          .append(createClickableTpsText(tpsFormatted, tps));
+
+      source.sendMessage(builder.build());
+    } else {
+      // プレーンテキスト
+      String label = ServerUtils.LANG.get("tps.result", tpsFormatted);
+      source.sendMessage(Text.of(label));
+    }
 
     return Command.SINGLE_SUCCESS;
+  }
+
+  /**
+   * クリック可能なTPS値テキストを生成する．
+   *
+   * @param tpsFormatted フォーマット済みTPS文字列
+   * @param tps TPS値
+   * @return クリック可能なテキスト
+   */
+  private static Text createClickableTpsText(String tpsFormatted, double tps) {
+    net.minecraft.util.Formatting color = getTpsColor(tps);
+
+    return Text.literal(tpsFormatted)
+        .formatted(color)
+        .styled(
+            style ->
+                style.withClickEvent(
+                    new net.minecraft.text.ClickEvent(
+                        net.minecraft.text.ClickEvent.Action.RUN_COMMAND, "/suMspt")));
+  }
+
+  /**
+   * TPS値に基づいて色を決定する．
+   *
+   * @param tps TPS値
+   * @return 適切な色フォーマット
+   */
+  private static net.minecraft.util.Formatting getTpsColor(double tps) {
+    if (tps >= 19.5) {
+      return io.github.keufcp.utils.ModStyle.VALUE_GOOD;
+    } else if (tps >= 15.0) {
+      return io.github.keufcp.utils.ModStyle.VALUE_WARN;
+    } else {
+      return io.github.keufcp.utils.ModStyle.VALUE_BAD;
+    }
   }
 }

@@ -70,6 +70,7 @@ public class MobCapFormatter {
       ServerWorld world, boolean debug, boolean isLast) {
     MobCapProcessor.MobCapInfo info = MobCapProcessor.getMobCapInfo(world);
     String dimensionDisplayName = MobCapProcessor.getDisplayDimensionName(world);
+    String dimensionId = world.getRegistryKey().getValue().toString();
 
     ColoredTextBuilder.Builder builder = new ColoredTextBuilder.Builder();
 
@@ -81,14 +82,15 @@ public class MobCapFormatter {
           .build();
     }
 
+    // クリック可能なディメンション名を追加
+    builder.append(createClickableDimensionName(dimensionDisplayName, dimensionId));
     builder
-        .append(dimensionDisplayName, ColoredTextBuilder.StatusColors.getInfoColor())
-        .append(": ", ColoredTextBuilder.StatusColors.getNormalColor())
+        .append(": ", ModStyle.VALUE_NORMAL)
         .append(
             String.valueOf(info.getCurrentMonsterCount()),
             ColoredTextBuilder.MobCapColors.getCurrentCountColor(
                 info.getCurrentMonsterCount(), info.getMobCap()))
-        .append("/", ColoredTextBuilder.StatusColors.getNormalColor())
+        .append("/", ModStyle.VALUE_NORMAL)
         .append(
             String.valueOf(info.getMobCap()),
             ColoredTextBuilder.MobCapColors.getCapLimitColor(
@@ -103,15 +105,13 @@ public class MobCapFormatter {
                   info.getCapacity(),
                   info.getSpawnChunkCount(),
                   MobCapProcessor.SPAWN_CHUNK_AREA_CONSTANT),
-              ColoredTextBuilder.StatusColors.getDisabledColor());
+              ModStyle.LABEL);
     }
 
     if (info.hasZeroChunkWarning()) {
       builder
-          .append(" - ", ColoredTextBuilder.StatusColors.getNormalColor())
-          .append(
-              ServerUtils.LANG.get("mobcap.warning.zero_chunks"),
-              ColoredTextBuilder.StatusColors.getWarningColor());
+          .append(" - ", ModStyle.VALUE_NORMAL)
+          .append(ServerUtils.LANG.get("mobcap.warning.zero_chunks"), ModStyle.VALUE_WARN);
     }
 
     if (!isLast) {
@@ -119,6 +119,25 @@ public class MobCapFormatter {
     }
 
     return builder.build();
+  }
+
+  /**
+   * クリック可能なディメンション名テキストを生成する．
+   *
+   * @param dimensionDisplayName 表示用ディメンション名
+   * @param dimensionId ディメンションID (例: "minecraft:overworld")
+   * @return クリック可能なテキスト
+   */
+  private static Text createClickableDimensionName(
+      String dimensionDisplayName, String dimensionId) {
+    return Text.literal(dimensionDisplayName)
+        .formatted(ModStyle.CLICKABLE)
+        .styled(
+            style ->
+                style.withClickEvent(
+                    new net.minecraft.text.ClickEvent(
+                        net.minecraft.text.ClickEvent.Action.RUN_COMMAND,
+                        "/suMobCap " + dimensionId + " debug")));
   }
 
   private static void appendDimensionMobCapInfo(
