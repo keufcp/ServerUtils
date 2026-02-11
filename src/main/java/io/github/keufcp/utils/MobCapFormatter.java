@@ -90,13 +90,13 @@ public class MobCapFormatter {
                             new ClickEvent(
                                 ClickEvent.Action.RUN_COMMAND,
                                 "/suMobCap " + dimensionId + " debug"))))
-        .append(": ", ModStyle.VALUE_NORMAL)
+        .append(": ", ModStyle.LABEL)
         .append(
             String.valueOf(info.getCurrentMonsterCount()),
             info.getCurrentMonsterCount() > info.getMobCap()
                 ? ModStyle.VALUE_BAD
                 : ModStyle.VALUE_GOOD)
-        .append("/", ModStyle.VALUE_NORMAL)
+        .append("/", ModStyle.LABEL)
         .append(
             String.valueOf(info.getMobCap()),
             info.getMobCap() == 0 && info.getSpawnChunkCount() == 0
