@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 
@@ -16,7 +17,7 @@ public class MobCapFormatter {
   public static Text createColoredAllDimensionsOutput(ServerCommandSource source, boolean debug) {
     ColoredTextBuilder.Builder builder = new ColoredTextBuilder.Builder();
     builder.appendLine(
-        ServerUtils.LANG.get("mobcap.title.all"), ColoredTextBuilder.StatusColors.getTitleColor());
+        ServerUtils.LANG.get("mobcap.title.all"), ModStyle.CLICKABLE);
 
     List<RegistryKey<World>> worldKeys = new ArrayList<>(source.getServer().getWorldRegistryKeys());
     for (int i = 0; i < worldKeys.size(); i++) {
@@ -36,7 +37,7 @@ public class MobCapFormatter {
     ColoredTextBuilder.Builder builder = new ColoredTextBuilder.Builder();
     builder.appendLine(
         ServerUtils.LANG.get("mobcap.title.single", dimensionDisplayName),
-        ColoredTextBuilder.StatusColors.getTitleColor());
+        ModStyle.CLICKABLE);
     builder.append(createColoredDimensionMobCapInfo(world, debug, true));
     return builder.build();
   }
@@ -70,6 +71,7 @@ public class MobCapFormatter {
       ServerWorld world, boolean debug, boolean isLast) {
     MobCapProcessor.MobCapInfo info = MobCapProcessor.getMobCapInfo(world);
     String dimensionDisplayName = MobCapProcessor.getDisplayDimensionName(world);
+    String dimensionId = world.getRegistryKey().getValue().toString();
 
     ColoredTextBuilder.Builder builder = new ColoredTextBuilder.Builder();
 
@@ -77,22 +79,28 @@ public class MobCapFormatter {
       return builder
           .appendLine(
               ServerUtils.LANG.get("mobcap.error.spawn_info"),
-              ColoredTextBuilder.StatusColors.getErrorColor())
+              ModStyle.VALUE_BAD)
           .build();
     }
 
+    // ディメンション名をクリック可能にする
     builder
-        .append(dimensionDisplayName, ColoredTextBuilder.StatusColors.getInfoColor())
-        .append(": ", ColoredTextBuilder.StatusColors.getNormalColor())
+        .append(
+            Text.literal(dimensionDisplayName)
+                .formatted(ModStyle.CLICKABLE)
+                .styled(style -> style.withClickEvent(
+                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, 
+                        "/suMobCap " + dimensionId + " debug"))))
+        .append(": ", ModStyle.VALUE_NORMAL)
         .append(
             String.valueOf(info.getCurrentMonsterCount()),
-            ColoredTextBuilder.MobCapColors.getCurrentCountColor(
-                info.getCurrentMonsterCount(), info.getMobCap()))
-        .append("/", ColoredTextBuilder.StatusColors.getNormalColor())
+            info.getCurrentMonsterCount() > info.getMobCap() ? ModStyle.VALUE_BAD : ModStyle.VALUE_GOOD)
+        .append("/", ModStyle.VALUE_NORMAL)
         .append(
             String.valueOf(info.getMobCap()),
-            ColoredTextBuilder.MobCapColors.getCapLimitColor(
-                info.getMobCap(), info.getSpawnChunkCount()));
+            info.getMobCap() == 0 && info.getSpawnChunkCount() == 0 
+                ? ModStyle.LABEL 
+                : (info.getMobCap() == 0 ? ModStyle.VALUE_BAD : ModStyle.VALUE_NORMAL));
 
     if (debug) {
       builder
@@ -103,15 +111,15 @@ public class MobCapFormatter {
                   info.getCapacity(),
                   info.getSpawnChunkCount(),
                   MobCapProcessor.SPAWN_CHUNK_AREA_CONSTANT),
-              ColoredTextBuilder.StatusColors.getDisabledColor());
+              ModStyle.LABEL);
     }
 
     if (info.hasZeroChunkWarning()) {
       builder
-          .append(" - ", ColoredTextBuilder.StatusColors.getNormalColor())
+          .append(" - ", ModStyle.VALUE_NORMAL)
           .append(
               ServerUtils.LANG.get("mobcap.warning.zero_chunks"),
-              ColoredTextBuilder.StatusColors.getWarningColor());
+              ModStyle.VALUE_WARN);
     }
 
     if (!isLast) {
