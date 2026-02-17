@@ -55,13 +55,13 @@ public class ColoredTextBuilder {
      */
     public static Formatting getNumeratorColor(long numerator, int denominator) {
       if (denominator == 0) {
-        return Formatting.GRAY;
+        return ModStyle.LABEL;
       }
 
       if (numerator > denominator) {
-        return Formatting.RED;
+        return ModStyle.VALUE_BAD;
       } else {
-        return Formatting.GREEN;
+        return ModStyle.VALUE_GOOD;
       }
     }
 
@@ -75,12 +75,12 @@ public class ColoredTextBuilder {
     public static Formatting getDenominatorColor(int denominator, boolean isValidState) {
       if (denominator == 0) {
         if (isValidState) {
-          return Formatting.GRAY;
+          return ModStyle.LABEL;
         } else {
-          return Formatting.RED;
+          return ModStyle.VALUE_BAD;
         }
       } else {
-        return Formatting.WHITE;
+        return ModStyle.VALUE_NORMAL;
       }
     }
   }
@@ -96,15 +96,15 @@ public class ColoredTextBuilder {
      */
     public static Formatting getPercentageColor(double percentage) {
       if (percentage >= 1.0) {
-        return Formatting.RED;
+        return ModStyle.VALUE_BAD;
       } else if (percentage >= 0.9) {
-        return Formatting.YELLOW;
+        return ModStyle.VALUE_WARN;
       } else if (percentage >= 0.7) {
-        return Formatting.GREEN;
+        return ModStyle.VALUE_GOOD;
       } else if (percentage >= 0.5) {
-        return Formatting.DARK_GREEN;
+        return Formatting.DARK_GREEN; // ModStyleにないのでこれだけ残すか、定義するか
       } else {
-        return Formatting.AQUA;
+        return ModStyle.CLICKABLE; // AQUA
       }
     }
   }
@@ -118,7 +118,7 @@ public class ColoredTextBuilder {
      * @return エラー用フォーマット
      */
     public static Formatting getErrorColor() {
-      return Formatting.RED;
+      return ModStyle.VALUE_BAD;
     }
 
     /**
@@ -127,7 +127,7 @@ public class ColoredTextBuilder {
      * @return 警告用フォーマット
      */
     public static Formatting getWarningColor() {
-      return Formatting.YELLOW;
+      return ModStyle.VALUE_WARN;
     }
 
     /**
@@ -136,7 +136,7 @@ public class ColoredTextBuilder {
      * @return 情報用フォーマット
      */
     public static Formatting getInfoColor() {
-      return Formatting.AQUA;
+      return ModStyle.CLICKABLE; // AQUA -> CLICKABLE (またはVALUE_NORMAL?) 元はAQUA
     }
 
     /**
@@ -145,7 +145,7 @@ public class ColoredTextBuilder {
      * @return 成功用フォーマット
      */
     public static Formatting getSuccessColor() {
-      return Formatting.GREEN;
+      return ModStyle.VALUE_GOOD;
     }
 
     /**
@@ -154,7 +154,7 @@ public class ColoredTextBuilder {
      * @return 無効用フォーマット
      */
     public static Formatting getDisabledColor() {
-      return Formatting.GRAY;
+      return ModStyle.LABEL;
     }
 
     /**
@@ -163,7 +163,7 @@ public class ColoredTextBuilder {
      * @return 通常用フォーマット
      */
     public static Formatting getNormalColor() {
-      return Formatting.WHITE;
+      return ModStyle.VALUE_NORMAL;
     }
 
     /**
@@ -174,7 +174,7 @@ public class ColoredTextBuilder {
      * @return タイトル用フォーマット（DARK_PURPLE）
      */
     public static Formatting getTitleColor() {
-      return Formatting.DARK_PURPLE;
+      return Formatting.DARK_PURPLE; // ModStyleにないので維持
     }
   }
 
