@@ -52,7 +52,7 @@ dependencies {
     // Quartz scheduler for webhook scheduling
     modImplementation include("org.quartz-scheduler:quartz:2.5.2")
     // Quartzの依存関係
-    modImplementation include("org.slf4j:slf4j-api:2.0.17")
+    modImplementation include("org.slf4j:slf4j-api:2.0.18")
     modImplementation include("com.zaxxer:HikariCP:7.0.2") { exclude(group: "*") }
 
     // Gson for JSON processing (if not already available through Minecraft)
