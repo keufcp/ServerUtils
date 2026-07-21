@@ -1,7 +1,7 @@
 plugins {
     id 'fabric-loom' version "${loom_version}"
     id 'maven-publish'
-    id 'com.diffplug.spotless' version '7.0.4'
+    id 'com.diffplug.spotless' version '8.2.1'
 }
 
 version = project.mod_version
@@ -54,13 +54,13 @@ dependencies {
     modImplementation include("eu.pb4:placeholder-api:${project.placeholder_api_version}")
 
     // Quartz scheduler for webhook scheduling
-    modImplementation include("org.quartz-scheduler:quartz:2.5.0")
+    modImplementation include("org.quartz-scheduler:quartz:2.5.2")
     // Quartzの依存関係
     modImplementation include("org.slf4j:slf4j-api:2.0.17")
-    modImplementation include("com.zaxxer:HikariCP:6.3.0") { exclude(group: "*") }
+    modImplementation include("com.zaxxer:HikariCP:7.0.2") { exclude(group: "*") }
 
     // Gson for JSON processing (if not already available through Minecraft)
-    modImplementation include("com.google.code.gson:gson:2.13.1")
+    modImplementation include("com.google.code.gson:gson:2.13.2")
 }
 
 processResources {
