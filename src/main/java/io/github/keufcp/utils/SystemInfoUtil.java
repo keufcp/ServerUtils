@@ -7,14 +7,18 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
 
 /** システム情報（CPU使用率，メモリ使用率など）を取得し，コマンド実行者に送信するためのユーティリティクラス． JavaのManagement APIを使用して情報を取得． */
 public class SystemInfoUtil {
 
-  /** オペレーティングシステムに関する情報を取得するためのMXBeanインスタンス． CPU使用率やシステムロードアベレージの取得に使用． */
-  private static final OperatingSystemMXBean osBean =
-      (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+  /**
+   * オペレーティングシステムに関する情報を取得するためのMXBeanインスタンス． CPU使用率やシステムロードアベレージの取得に使用．
+   *
+   * <p>標準インターフェース型で保持する．com.sun.management 拡張への直接キャストで初期化すると，
+   * 拡張が存在しないJVMでクラス初期化が失敗し，本クラスの全コマンドが動作しなくなるため．
+   */
+  private static final java.lang.management.OperatingSystemMXBean osBean =
+      ManagementFactory.getOperatingSystemMXBean();
 
   /** Java仮想マシンのメモリ管理に関する情報を取得するためのMXBeanインスタンス． ヒープメモリおよび非ヒープメモリの使用状況の取得に使用． */
   private static final MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
@@ -27,7 +31,10 @@ public class SystemInfoUtil {
   public static void sendCpuInfo(CommandContext<ServerCommandSource> context) {
     try {
       // システムCPU使用率 (0.0 - 1.0 の範囲で，1.0が100%)．取得不能時は負値が返る
-      double systemCpuLoad = osBean.getCpuLoad();
+      double systemCpuLoad = -1;
+      if (osBean instanceof OperatingSystemMXBean sunOsBean) {
+        systemCpuLoad = sunOsBean.getCpuLoad();
+      }
       // システムロードアベレージ (過去1分間のシステム負荷平均)．取得不能時は負値が返る
       double systemLoadAverage = osBean.getSystemLoadAverage();
 
@@ -42,11 +49,9 @@ public class SystemInfoUtil {
               .formatted(cpuLoadStr, loadAvgStr));
     } catch (Exception e) {
       ServerUtils.LOGGER.error("Failed to get CPU info", e);
-      context
-          .getSource()
-          .sendFeedback(
-              () -> Text.literal("Failed to retrieve CPU information. See server log for details."),
-              false);
+      StyledText.send(
+          context.getSource(),
+          "<red>Failed to retrieve CPU information. See server log for details.</red>");
     }
   }
 
@@ -77,13 +82,9 @@ public class SystemInfoUtil {
                   formatBytes(nonHeapMax)));
     } catch (Exception e) {
       ServerUtils.LOGGER.error("Failed to get Memory info", e);
-      context
-          .getSource()
-          .sendFeedback(
-              () ->
-                  Text.literal(
-                      "Failed to retrieve Memory information. See server log for details."),
-              false);
+      StyledText.send(
+          context.getSource(),
+          "<red>Failed to retrieve Memory information. See server log for details.</red>");
     }
   }
 
