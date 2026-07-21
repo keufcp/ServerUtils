@@ -3,11 +3,11 @@ package io.github.keufcp.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.keufcp.ServerUtils;
+import io.github.keufcp.utils.StyledText;
 import io.github.keufcp.utils.TickTimeUtil;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
 
 /**
  * サーバーMSPT (平均ティック時間) 表示コマンドクラス．
@@ -39,9 +39,11 @@ public class ServerUtilsMsptCommand {
 
     double mspt = TickTimeUtil.getMeanTickTime();
 
-    String label = ServerUtils.LANG.get("mspt.result", String.format("%.2f", mspt));
+    // MSPT値はしきい値で色分けする
+    String value =
+        "<%1$s>%2$s</%1$s>".formatted(StyledText.msptColor(mspt), String.format("%.2f", mspt));
 
-    source.sendMessage(Text.of(label));
+    StyledText.send(source, ServerUtils.LANG.get("mspt.result", value));
 
     return Command.SINGLE_SUCCESS;
   }

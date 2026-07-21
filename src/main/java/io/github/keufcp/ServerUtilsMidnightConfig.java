@@ -62,6 +62,36 @@ public class ServerUtilsMidnightConfig extends MidnightConfig {
   /** Webhook送信間隔（cron式）． デフォルトは毎日午前0時（"0 0 0 * * ?"）． */
   @Entry public static String webhookCronExpression = "0 0 0 * * ?";
 
+  /**
+   * CPU使用率コマンド実行権限レベル．
+   *
+   * <p>権限レベル一覧：
+   *
+   * <ul>
+   *   <li>レベル0: 全プレイヤー
+   *   <li>レベル1: モデレーター
+   *   <li>レベル2: ゲームマスター
+   *   <li>レベル3: 管理者
+   *   <li>レベル4: オーナー (フルOP，デフォルト)
+   * </ul>
+   */
+  @Entry public static int cpuPermissionLevel = 4;
+
+  /**
+   * メモリ使用率コマンド実行権限レベル．
+   *
+   * <p>権限レベル一覧：
+   *
+   * <ul>
+   *   <li>レベル0: 全プレイヤー
+   *   <li>レベル1: モデレーター
+   *   <li>レベル2: ゲームマスター
+   *   <li>レベル3: 管理者
+   *   <li>レベル4: オーナー (フルOP，デフォルト)
+   * </ul>
+   */
+  @Entry public static int memPermissionLevel = 4;
+
   /** 色付きテキスト出力有効化フラグ */
   @Entry public static boolean enableColoredOutput = true;
 
@@ -78,6 +108,8 @@ public class ServerUtilsMidnightConfig extends MidnightConfig {
     validateEnableSendWebhook();
     validateWebhookUrl();
     validateWebhookCronExpression();
+    validateCpuPermissionLevel();
+    validateMemPermissionLevel();
 
     // バリデーション後，変更有無に関わらず設定ファイルへ書き込み
     ServerUtils.LOGGER.info("Writing configuration values to file after validation.");
@@ -131,6 +163,24 @@ public class ServerUtilsMidnightConfig extends MidnightConfig {
    */
   public static void validateMobcapPermissionLevel() {
     mobcapPermissionLevel = validatePermissionLevel(mobcapPermissionLevel, "mobcap");
+  }
+
+  /**
+   * CPU使用率コマンド実行権限レベルバリデーション．
+   *
+   * <p>権限レベル0〜4範囲外の場合，デフォルト値4（オーナー権限）へリセット． サーバー起動時やリロード時呼出．
+   */
+  public static void validateCpuPermissionLevel() {
+    cpuPermissionLevel = validatePermissionLevel(cpuPermissionLevel, "cpu");
+  }
+
+  /**
+   * メモリ使用率コマンド実行権限レベルバリデーション．
+   *
+   * <p>権限レベル0〜4範囲外の場合，デフォルト値4（オーナー権限）へリセット． サーバー起動時やリロード時呼出．
+   */
+  public static void validateMemPermissionLevel() {
+    memPermissionLevel = validatePermissionLevel(memPermissionLevel, "mem");
   }
 
   /**

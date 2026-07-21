@@ -3,11 +3,11 @@ package io.github.keufcp.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.keufcp.ServerUtils;
+import io.github.keufcp.utils.StyledText;
 import io.github.keufcp.utils.TickTimeUtil;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
 
 /**
  * サーバーTPS (Ticks Per Second) 表示コマンドクラス．
@@ -39,10 +39,13 @@ public class ServerUtilsTpsCommand {
 
     double tps = TickTimeUtil.calculateTPS();
 
-    String label = ServerUtils.LANG.get("tps.result", String.format("%.2f", tps));
+    // TPS値はしきい値で色分けし，クリックで /suMspt を実行する
+    String color = StyledText.tpsColor(tps);
+    String value =
+        "<%1$s><run_cmd '/suMspt'>%2$s</run_cmd></%1$s>"
+            .formatted(color, String.format("%.2f", tps));
 
-    // TPS結果をプレイヤーに表示
-    source.sendMessage(Text.of(label));
+    StyledText.send(source, ServerUtils.LANG.get("tps.result", value));
 
     return Command.SINGLE_SUCCESS;
   }
