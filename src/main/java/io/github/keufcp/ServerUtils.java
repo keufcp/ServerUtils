@@ -1,6 +1,8 @@
 package io.github.keufcp;
 
 import eu.midnightdust.lib.config.MidnightConfig;
+import io.github.keufcp.commands.ServerUtilsCpuCommand;
+import io.github.keufcp.commands.ServerUtilsMemCommand;
 import io.github.keufcp.commands.ServerUtilsMobCapCommand;
 import io.github.keufcp.commands.ServerUtilsMsptCommand;
 import io.github.keufcp.commands.ServerUtilsReloadCommand;
@@ -55,6 +57,8 @@ public class ServerUtils implements ModInitializer {
     ServerUtilsReloadCommand.register();
     ServerUtilsMsptCommand.register();
     ServerUtilsMobCapCommand.register();
+    ServerUtilsCpuCommand.register();
+    ServerUtilsMemCommand.register();
 
     if (ServerUtilsMidnightConfig.enableSendWebhook) {
       WebhookSender.initialize();

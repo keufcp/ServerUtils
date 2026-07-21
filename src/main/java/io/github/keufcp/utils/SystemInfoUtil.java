@@ -1,0 +1,99 @@
+package io.github.keufcp.utils;
+
+import com.mojang.brigadier.context.CommandContext;
+import com.sun.management.OperatingSystemMXBean;
+import io.github.keufcp.ServerUtils;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
+
+/** システム情報（CPU使用率，メモリ使用率など）を取得し，コマンド実行者に送信するためのユーティリティクラス． JavaのManagement APIを使用して情報を取得． */
+public class SystemInfoUtil {
+
+  /** オペレーティングシステムに関する情報を取得するためのMXBeanインスタンス． CPU使用率やシステムロードアベレージの取得に使用． */
+  private static final OperatingSystemMXBean osBean =
+      (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+
+  /** Java仮想マシンのメモリ管理に関する情報を取得するためのMXBeanインスタンス． ヒープメモリおよび非ヒープメモリの使用状況の取得に使用． */
+  private static final MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
+
+  /**
+   * 現在のCPU使用率（プロセスおよびシステム全体）をコマンド実行者に送信． プロセスCPU使用率はJVMプロセスのCPU負荷を，システムロードアベレージはシステム全体の負荷を示す．
+   *
+   * @param context コマンドの実行コンテキスト．メッセージの送信に使用．
+   */
+  public static void sendCpuInfo(CommandContext<ServerCommandSource> context) {
+    try {
+      // システムCPU使用率 (0.0 - 1.0 の範囲で，1.0が100%)
+      double systemCpuLoad = osBean.getSystemCpuLoad() * 100;
+      // システムロードアベレージ (過去1分間のシステム負荷平均)
+      double systemLoadAverage = osBean.getSystemLoadAverage();
+
+      StyledText.send(
+          context.getSource(),
+          ("<gold>CPU Usage:</gold>\n"
+                  + "  <aqua>System:</aqua> <white>%.2f%%</white>\n"
+                  + "  <aqua>System Load Average:</aqua> <white>%.2f</white>")
+              .formatted(systemCpuLoad, systemLoadAverage));
+    } catch (Exception e) {
+      ServerUtils.LOGGER.error("Failed to get CPU info: " + e.getMessage());
+      context
+          .getSource()
+          .sendFeedback(
+              () -> Text.literal("Failed to retrieve CPU information. See server log for details."),
+              false);
+    }
+  }
+
+  /**
+   * 現在のメモリ使用率（ヒープおよび非ヒープ）をコマンド実行者に送信． 使用量と最大容量を表示．
+   *
+   * @param context コマンドの実行コンテキスト．メッセージの送信に使用．
+   */
+  public static void sendMemInfo(CommandContext<ServerCommandSource> context) {
+    try {
+      MemoryUsage heapMemory = memBean.getHeapMemoryUsage();
+      MemoryUsage nonHeapMemory = memBean.getNonHeapMemoryUsage();
+
+      long heapUsed = heapMemory.getUsed();
+      long heapMax = heapMemory.getMax();
+      long nonHeapUsed = nonHeapMemory.getUsed();
+      long nonHeapMax = nonHeapMemory.getMax();
+
+      StyledText.send(
+          context.getSource(),
+          ("<gold>Memory Usage:</gold>\n"
+                  + "  <aqua>Heap:</aqua> <white>%s</white> <gray>/</gray> <white>%s</white>\n"
+                  + "  <aqua>Non-Heap:</aqua> <white>%s</white> <gray>/</gray> <white>%s</white>")
+              .formatted(
+                  formatBytes(heapUsed),
+                  formatBytes(heapMax),
+                  formatBytes(nonHeapUsed),
+                  formatBytes(nonHeapMax)));
+    } catch (Exception e) {
+      ServerUtils.LOGGER.error("Failed to get Memory info: " + e.getMessage());
+      context
+          .getSource()
+          .sendFeedback(
+              () ->
+                  Text.literal(
+                      "Failed to retrieve Memory information. See server log for details."),
+              false);
+    }
+  }
+
+  /**
+   * バイト数を読みやすい形式（KB，MB，GBなど）にフォーマット．
+   *
+   * @param bytes フォーマットするバイト数．
+   * @return フォーマットされた文字列．
+   */
+  private static String formatBytes(long bytes) {
+    if (bytes < 1024) return bytes + " B";
+    int exp = (int) (Math.log(bytes) / Math.log(1024));
+    String pre = "KMGTPE".charAt(exp - 1) + "";
+    return String.format("%.2f %sB", bytes / Math.pow(1024, exp), pre);
+  }
+}

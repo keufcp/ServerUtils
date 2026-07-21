@@ -8,6 +8,8 @@ ServerUtilsは，サーバーの状態を可視化するコマンド群に加え
 
 | コマンド名      | 説明                                                                 | 権限レベル |
 | --------------- | -------------------------------------------------------------------- | ---------- |
+| `/suCpu`        | サーバーのCPU使用率とシステムロードアベレージを表示します．               | 設定による   |
+| `/suMem`        | サーバーのメモリ使用量（ヒープ/非ヒープ）を表示します．                   | 設定による   |
 | `/suMobCap`     | サーバーのMobCap（モンスター上限）情報を表示します．                      | 設定による   |
 | `/suMspt`       | サーバーの平均ティック時間 (MSPT) を表示します．                         | 2          |
 | `/suReload`     | ServerUtilsの設定と言語リソースを再読み込みします．                      | 4          |
@@ -65,6 +67,8 @@ ServerUtilsは，サーバーの状態を可視化するコマンド群に加え
 | `locale`                  | `"en_US"`           | Mod内で使用される言語を設定します．「en_US」(英語) または「ja_JP」(日本語) を指定できます．変更するとModの表示言語が変わります．日本語表示にする場合，環境によってはターミナルの文字コード設定 (例: UTF-8) が必要になることがあります． |
 | `uptimePermissionLevel`   | `4`                 | `/uptime` コマンドの実行に必要な権限レベルを設定します．値の範囲は0から4です．詳細は上記の「権限レベルについて」を参照してください．                                   |
 | `mobcapPermissionLevel`   | `4`                 | `/suMobCap` コマンドの実行に必要な権限レベルを設定します．値の範囲は0から4です．詳細は上記の「権限レベルについて」を参照してください．                                 |
+| `cpuPermissionLevel`      | `4`                 | `/suCpu` コマンドの実行に必要な権限レベルを設定します．値の範囲は0から4です．                                                                                        |
+| `memPermissionLevel`      | `4`                 | `/suMem` コマンドの実行に必要な権限レベルを設定します．値の範囲は0から4です．                                                                                        |
 | `enableColoredOutput`     | `true`              | プレイヤーに対する色付きテキスト出力を有効にするかどうかを設定します．`false` にするとプレーンテキストで出力されます．                                                    |
 | `enableSendWebhook`       | `false`             | Webhook送信を有効にするかどうかを設定します．`true` にすると，設定されたURLにサーバー情報を送信します．                                                              |
 | `webhookUrl`              | `""`                | Webhookの送信先URLを設定します．DiscordのWebhook URLなどを指定します．`enableSendWebhook` が `true` の場合にのみ使用されます．                               |
@@ -77,6 +81,21 @@ ServerUtilsは，サーバーの状態を可視化するコマンド群に加え
 ## ライセンス
 
 このModは [MIT License](LICENSE) の下で公開されています．
+
+### 同梱ライブラリ (Third-party Licenses)
+
+このModのjarには以下のライブラリが無改変のままjar-in-jar形式で同梱されています．各ライブラリの著作権はそれぞれの作者に帰属し，それぞれのライセンスが適用されます．
+
+| ライブラリ | ライセンス |
+| --- | --- |
+| [MidnightLib](https://github.com/TeamMidnightDust/MidnightLib) | [MIT](https://github.com/TeamMidnightDust/MidnightLib/blob/main/LICENSE) |
+| [Text Placeholder API](https://github.com/Patbox/TextPlaceholderAPI) | [LGPL-3.0](https://github.com/Patbox/TextPlaceholderAPI/blob/master/LICENSE) |
+| [Quartz Scheduler](https://github.com/quartz-scheduler/quartz) | [Apache-2.0](https://github.com/quartz-scheduler/quartz/blob/main/LICENSE.txt) |
+| [SLF4J](https://github.com/qos-ch/slf4j) | [MIT](https://github.com/qos-ch/slf4j/blob/master/LICENSE.txt) |
+| [HikariCP](https://github.com/brettwooldridge/HikariCP) | [Apache-2.0](https://github.com/brettwooldridge/HikariCP/blob/dev/LICENSE) |
+| [Gson](https://github.com/google/gson) | [Apache-2.0](https://github.com/google/gson/blob/main/LICENSE) |
+
+Text Placeholder API はLGPL-3.0で提供されており，同梱jarを差し替えることで別バージョンに置き換え可能です．
 
 ## 作者
 

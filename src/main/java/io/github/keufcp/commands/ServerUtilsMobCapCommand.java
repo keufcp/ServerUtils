@@ -7,10 +7,10 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import io.github.keufcp.ServerUtils;
 import io.github.keufcp.ServerUtilsMidnightConfig;
-import io.github.keufcp.utils.ColoredTextBuilder;
 import io.github.keufcp.utils.DimensionResolver;
 import io.github.keufcp.utils.MobCapFormatter;
 import io.github.keufcp.utils.MobCapProcessor;
+import io.github.keufcp.utils.StyledText;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.CommandSource;
@@ -73,14 +73,7 @@ public class ServerUtilsMobCapCommand {
 
   /** 全ディメンションコマンドの実行． */
   private static int executeAllDimensionsCommand(ServerCommandSource source, boolean debug) {
-    Text output;
-    if (ColoredTextBuilder.shouldUseColoredText(source)) {
-      output = MobCapFormatter.createColoredAllDimensionsOutput(source, debug);
-    } else {
-      output = Text.literal(MobCapFormatter.createPlainAllDimensionsOutput(source, debug));
-    }
-
-    source.sendFeedback(() -> output, false);
+    StyledText.send(source, MobCapFormatter.buildAllDimensionsTemplate(source, debug));
     return 1;
   }
 
@@ -96,17 +89,8 @@ public class ServerUtilsMobCapCommand {
 
     String dimensionDisplayName = MobCapProcessor.getDisplayDimensionName(world);
 
-    Text output;
-    if (ColoredTextBuilder.shouldUseColoredText(source)) {
-      output =
-          MobCapFormatter.createColoredSingleDimensionOutput(world, dimensionDisplayName, debug);
-    } else {
-      output =
-          Text.literal(
-              MobCapFormatter.createPlainSingleDimensionOutput(world, dimensionDisplayName, debug));
-    }
-
-    source.sendFeedback(() -> output, false);
+    StyledText.send(
+        source, MobCapFormatter.buildSingleDimensionTemplate(world, dimensionDisplayName, debug));
     return 1;
   }
 

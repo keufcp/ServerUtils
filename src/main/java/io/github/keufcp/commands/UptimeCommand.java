@@ -4,11 +4,11 @@ import static io.github.keufcp.ServerUtilsMidnightConfig.uptimePermissionLevel;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.keufcp.utils.StyledText;
 import java.util.List;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
 
 /**
  * サーバー稼働時間（Uptime）表示コマンドクラス．
@@ -79,7 +79,7 @@ public class UptimeCommand {
     List<Long> uptimeList = calculateUptime();
     String formattedUptime = formatUptimeValue(uptimeList);
     String label = formatUptimeLabel(formattedUptime);
-    context.getSource().sendFeedback(() -> Text.literal(label), false);
+    StyledText.send(context.getSource(), label);
     return Command.SINGLE_SUCCESS;
   }
 }
