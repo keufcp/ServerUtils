@@ -60,7 +60,7 @@ dependencies {
     modImplementation include("com.zaxxer:HikariCP:7.0.2") { exclude(group: "*") }
 
     // Gson for JSON processing (if not already available through Minecraft)
-    modImplementation include("com.google.code.gson:gson:2.13.2")
+    modImplementation include("com.google.code.gson:gson:2.14.0")
 }
 
 processResources {
