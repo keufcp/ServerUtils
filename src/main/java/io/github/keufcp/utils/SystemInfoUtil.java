@@ -26,19 +26,22 @@ public class SystemInfoUtil {
    */
   public static void sendCpuInfo(CommandContext<ServerCommandSource> context) {
     try {
-      // システムCPU使用率 (0.0 - 1.0 の範囲で，1.0が100%)
-      double systemCpuLoad = osBean.getSystemCpuLoad() * 100;
-      // システムロードアベレージ (過去1分間のシステム負荷平均)
+      // システムCPU使用率 (0.0 - 1.0 の範囲で，1.0が100%)．取得不能時は負値が返る
+      double systemCpuLoad = osBean.getCpuLoad();
+      // システムロードアベレージ (過去1分間のシステム負荷平均)．取得不能時は負値が返る
       double systemLoadAverage = osBean.getSystemLoadAverage();
+
+      String cpuLoadStr = systemCpuLoad < 0 ? "N/A" : String.format("%.2f%%", systemCpuLoad * 100);
+      String loadAvgStr = systemLoadAverage < 0 ? "N/A" : String.format("%.2f", systemLoadAverage);
 
       StyledText.send(
           context.getSource(),
           ("<gold>CPU Usage:</gold>\n"
-                  + "  <aqua>System:</aqua> <white>%.2f%%</white>\n"
-                  + "  <aqua>System Load Average:</aqua> <white>%.2f</white>")
-              .formatted(systemCpuLoad, systemLoadAverage));
+                  + "  <aqua>System:</aqua> <white>%s</white>\n"
+                  + "  <aqua>System Load Average:</aqua> <white>%s</white>")
+              .formatted(cpuLoadStr, loadAvgStr));
     } catch (Exception e) {
-      ServerUtils.LOGGER.error("Failed to get CPU info: " + e.getMessage());
+      ServerUtils.LOGGER.error("Failed to get CPU info", e);
       context
           .getSource()
           .sendFeedback(
@@ -73,7 +76,7 @@ public class SystemInfoUtil {
                   formatBytes(nonHeapUsed),
                   formatBytes(nonHeapMax)));
     } catch (Exception e) {
-      ServerUtils.LOGGER.error("Failed to get Memory info: " + e.getMessage());
+      ServerUtils.LOGGER.error("Failed to get Memory info", e);
       context
           .getSource()
           .sendFeedback(
@@ -91,6 +94,8 @@ public class SystemInfoUtil {
    * @return フォーマットされた文字列．
    */
   private static String formatBytes(long bytes) {
+    // MemoryUsage.getMax() は最大値未定義時に -1 を返す
+    if (bytes < 0) return "N/A";
     if (bytes < 1024) return bytes + " B";
     int exp = (int) (Math.log(bytes) / Math.log(1024));
     String pre = "KMGTPE".charAt(exp - 1) + "";
